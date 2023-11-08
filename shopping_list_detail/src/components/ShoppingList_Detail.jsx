@@ -18,8 +18,12 @@ import Tooltip from "@mui/material/Tooltip";
 export default function ListDetailComponent() {
   const [items, setItems] = React.useState([]);
   const [inputValue, setInputValue] = React.useState("");
-  const [listName, setListName] = useState("Název Nákupního Seznamu");
+  const [listName, setListName] = useState("Název Seznamu");
   const [isEditing, setIsEditing] = useState(false);
+  const [originalListName, setOriginalListName] = useState(listName);
+  const [isOwner, setIsOwner] = useState(true);
+  const [members, setMembers] = useState([]);
+  const [newMemberName, setNewMemberName] = useState("");
 
   const handleAddItem = () => {
     if (inputValue) {
@@ -41,6 +45,9 @@ export default function ListDetailComponent() {
   };
 
   const handleEditListName = () => {
+    if (!isEditing) {
+      setOriginalListName(listName); // Uloží původní hodnotu před začátkem editace
+    }
     setIsEditing(!isEditing);
   };
   const handleListNameChange = (e) => {
@@ -50,9 +57,24 @@ export default function ListDetailComponent() {
   function checkEmptyName(event) {
     const newName = event.target.value;
     if (newName.trim() === "") {
-      event.target.value = listName;
+      setListName(originalListName);
     }
   }
+
+  const toggleRole = () => {
+    setIsOwner(!isOwner);
+  };
+
+  const handleAddMember = () => {
+    if (newMemberName) {
+      setMembers([...members, newMemberName]);
+      setNewMemberName("");
+    }
+  };
+
+  const handleDeleteMember = (index) => {
+    setMembers(members.filter((_, i) => i !== index));
+  };
 
   return (
     <Box
@@ -114,7 +136,10 @@ export default function ListDetailComponent() {
           <TextField
             value={listName}
             onChange={handleListNameChange}
-            onBlur={() => setIsEditing(false)}
+            onBlur={(event) => {
+              setIsEditing(false);
+              checkEmptyName(event);
+            }}
             autoFocus
             size="small"
             sx={
@@ -135,7 +160,7 @@ export default function ListDetailComponent() {
                 lg: "2rem",
                 md: "2rem",
                 sm: "1.5rem",
-                xs: "1.4rem",
+                xs: "5.4vw",
               },
               fontFamily: "Edu TAS Beginner",
               color: "rgba(80, 2, 99, 1)",
@@ -151,31 +176,70 @@ export default function ListDetailComponent() {
             {listName}
           </Typography>
         )}
+        {isOwner && (
+          <IconButton
+            onClick={handleEditListName}
+            sx={{
+              ml: 1,
+              mb: 1,
+              mr: 1,
+              border: 2,
+              borderColor: "rgba(80, 2, 99, 1)",
+              borderRadius: 5,
+              backgroundColor: "rgba(80, 2, 99, 0.05)",
+              fontSize: {
+                xl: "2rem",
+                lg: "2rem",
+                md: "2rem",
+                sm: "1.5rem",
+                xs: "1.2rem",
+              },
+            }}
+          >
+            <EditIcon />
+          </IconButton>
+        )}
+      </Box>
+      <Button
+        variant="contained"
+        onClick={toggleRole}
+        sx={{
+          fontSize: {
+            xs: "0.6rem",
+          },
+          position: "absolute",
+          top: 120,
+          right: 8,
+        }}
+      >
+        {isOwner ? "Změna" : "Změna"}
+      </Button>
 
-        <IconButton
-          onClick={handleEditListName}
+      {isOwner ? (
+        <Typography
           sx={{
-            ml: 1,
-            mb: 1,
-            mr: 1,
-            border: 2,
-            borderColor: "rgba(80, 2, 99, 1)",
-            borderRadius: 5,
-            padding: 1,
-            backgroundColor: "rgba(80, 2, 99, 0.05)",
-            fontSize: {
-              xl: "2rem",
-              lg: "2rem",
-              md: "2rem",
-              sm: "1.5rem",
-              xs: "1.2rem",
-            },
+            fontSize: "1rem",
+            position: "absolute",
+            top: 154,
+            right: 14,
+            fontWeight: "bold",
           }}
         >
-          <EditIcon />
-        </IconButton>
-      </Box>
-
+          Vlastník
+        </Typography>
+      ) : (
+        <Typography
+          sx={{
+            fontSize: "1rem",
+            position: "absolute",
+            top: 154,
+            right: 24,
+            fontWeight: "bold",
+          }}
+        >
+          Člen
+        </Typography>
+      )}
       <List
         sx={{
           width: "100%",
@@ -219,9 +283,86 @@ export default function ListDetailComponent() {
         ))}
       </List>
 
-      <Divider
-        sx={{ width: "100%", my: 2, position: "absolute", bottom: 80 }}
-      />
+      {isOwner && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            // ... (další styly)
+          }}
+        >
+          <TextField
+            label="Jméno člena"
+            value={newMemberName}
+            onChange={(e) => setNewMemberName(e.target.value)}
+            size="small"
+            sx={{
+              ml: 1,
+              mr: 1,
+              minWidth: "10%",
+              "& .MuiOutlinedInput-root": {
+                color: "rgba(80, 2, 99,0.8)", // Barva textu
+                "& fieldset": {
+                  borderColor: "rgba(80, 2, 99, 0.8)",
+                  border: 2,
+                  borderRadius: 4, // Barva okraje
+                },
+                "&:hover fieldset": {
+                  borderColor: "rgba(80, 2, 99, 1)", // Barva okraje při najetí myší
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "rgba(80, 2, 99, 1)", // Barva okraje při zaměření
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "rgba(80, 2, 99,0.8)", // Barva popisku
+              },
+            }}
+          />
+          <Button
+            onClick={handleAddMember}
+            size="medium"
+            sx={{
+              minWidth: "10%",
+              mr: 1,
+              border: 2,
+              color: "white",
+              fontWeight: "bold",
+              borderColor: "rgba(80, 2, 99, 0.8)",
+              borderRadius: 4,
+              backgroundColor: "rgba(80, 2, 99, 0.5)",
+              "&:hover": {
+                backgroundColor: "rgba(80, 2, 99, 0.6)",
+                border: 2,
+                borderColor: "rgba(80, 2, 99, 0.6)",
+                color: "rgba(80, 2, 99,1)",
+              },
+            }}
+          >
+            Přidat
+          </Button>
+        </Box>
+      )}
+
+      {isOwner && (
+        <List>
+          {members.map((member, index) => (
+            <ListItem key={index}>
+              {member}
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => handleDeleteMember(index)}
+                sx={{}}
+              >
+                <DeleteForeverIcon />
+              </IconButton>
+            </ListItem>
+          ))}
+        </List>
+      )}
+
+      <Divider sx={{ width: "100%", position: "absolute", bottom: 80 }} />
 
       <Box
         sx={{

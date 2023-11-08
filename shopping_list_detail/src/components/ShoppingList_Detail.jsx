@@ -11,10 +11,15 @@ import Divider from "@mui/material/Divider";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useState, useEffect } from "react";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import Tooltip from "@mui/material/Tooltip";
 
 export default function ListDetailComponent() {
   const [items, setItems] = React.useState([]);
   const [inputValue, setInputValue] = React.useState("");
+  const [listName, setListName] = useState("Název Nákupního Seznamu");
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleAddItem = () => {
     if (inputValue) {
@@ -34,6 +39,21 @@ export default function ListDetailComponent() {
     );
     setItems(newItems);
   };
+
+  const handleEditListName = () => {
+    setIsEditing(!isEditing);
+  };
+  const handleListNameChange = (e) => {
+    setListName(e.target.value);
+  };
+
+  function checkEmptyName(event) {
+    const newName = event.target.value;
+    if (newName.trim() === "") {
+      event.target.value = listName;
+    }
+  }
+
   return (
     <Box
       sx={{
@@ -58,49 +78,91 @@ export default function ListDetailComponent() {
     >
       <Box
         sx={{
-          display: "flex", // Aktivuje flexbox
-          alignItems: "center", // Vertikálně vycentruje položky
-          width: "100%", // Nastaví šířku na 100% kontejneru
-          justifyContent: "center", // Zarovná položky na střed horizontálně
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
           top: 40,
-
           position: "absolute",
         }}
       >
-        <Typography
-          variant="h4"
-          component="h1"
-          gutterBottom
-          sx={{
-            ml: 1, // Přidává margin vlevo
-            fontSize: {
-              xl: "2rem",
-              lg: "2rem",
-              md: "2rem",
-              sm: "1.5rem",
-              xs: "1rem",
-            },
-            fontFamily: "Edu TAS Beginner",
-            color: "rgba(80, 2, 99, 1)",
-            border: 2,
-            borderColor: "rgba(80, 2, 99, 1)",
-            borderRadius: 6,
-            padding: 1,
-            backgroundColor: "rgba(80, 2, 99, 0.1)",
-          }}
-        >
-          Název Nákupního Seznamu
-        </Typography>
+        <Tooltip title="TO DO -> Všechny seznamy">
+          <IconButton
+            sx={{
+              ml: 1,
+              mr: 1,
+              mb: 1,
+              border: 2,
+              borderColor: "rgba(80, 2, 99, 1)",
+              borderRadius: 5,
+              padding: 1,
 
-        <EditIcon
+              backgroundColor: "rgba(255, 0, 0, 0.45)",
+              fontSize: {
+                xl: "2rem",
+                lg: "2rem",
+                md: "2rem",
+                sm: "1.5rem",
+                xs: "1.2rem",
+              },
+            }}
+          >
+            <ListAltIcon />
+          </IconButton>
+        </Tooltip>
+        {isEditing ? (
+          <TextField
+            value={listName}
+            onChange={handleListNameChange}
+            onBlur={() => setIsEditing(false)}
+            autoFocus
+            size="small"
+            sx={
+              {
+                // další styly pro TextField
+              }
+            }
+          />
+        ) : (
+          <Typography
+            variant="h4"
+            component="h1"
+            gutterBottom
+            onClick={handleEditListName}
+            sx={{
+              fontSize: {
+                xl: "2rem",
+                lg: "2rem",
+                md: "2rem",
+                sm: "1.5rem",
+                xs: "1.4rem",
+              },
+              fontFamily: "Edu TAS Beginner",
+              color: "rgba(80, 2, 99, 1)",
+              border: 2,
+              borderColor: "rgba(80, 2, 99, 1)",
+              borderRadius: 6,
+              padding: 1,
+              backgroundColor: "rgba(80, 2, 99, 0.1)",
+
+              // další styly pro Typography
+            }}
+          >
+            {listName}
+          </Typography>
+        )}
+
+        <IconButton
+          onClick={handleEditListName}
           sx={{
-            ml: { xl: 2, lg: 2, md: 2, sm: 1.5, xs: 1 },
-            mb: 0.5,
+            ml: 1,
+            mb: 1,
+            mr: 1,
             border: 2,
             borderColor: "rgba(80, 2, 99, 1)",
             borderRadius: 5,
             padding: 1,
-            backgroundColor: "rgba(80, 2, 99, 0.05",
+            backgroundColor: "rgba(80, 2, 99, 0.05)",
             fontSize: {
               xl: "2rem",
               lg: "2rem",
@@ -109,12 +171,22 @@ export default function ListDetailComponent() {
               xs: "1.2rem",
             },
           }}
-        />
+        >
+          <EditIcon />
+        </IconButton>
       </Box>
+
       <List
         sx={{
           width: "100%",
           fontFamily: "Edu TAS Beginner",
+          fontSize: {
+            xl: "2rem",
+            lg: "2rem",
+            md: "2rem",
+            sm: "1.5rem",
+            xs: "1.6rem",
+          },
         }}
       >
         {items.map((item, index) => (
@@ -142,7 +214,7 @@ export default function ListDetailComponent() {
               </>
             }
           >
-            {item.name} {/* Zobrazuje název položky */}
+            {item.name}
           </ListItem>
         ))}
       </List>
@@ -150,6 +222,7 @@ export default function ListDetailComponent() {
       <Divider
         sx={{ width: "100%", my: 2, position: "absolute", bottom: 80 }}
       />
+
       <Box
         sx={{
           mt: 2,
@@ -214,7 +287,6 @@ export default function ListDetailComponent() {
               "&:hover": {
                 backgroundColor: "rgba(80, 2, 99, 0.6)",
                 border: 2,
-
                 borderColor: "rgba(80, 2, 99, 0.6)",
                 color: "rgba(80, 2, 99,1)",
               },

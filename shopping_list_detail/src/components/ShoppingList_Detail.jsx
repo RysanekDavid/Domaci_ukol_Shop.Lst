@@ -9,6 +9,8 @@ import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import Divider from "@mui/material/Divider";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 export default function ListDetailComponent() {
   const [items, setItems] = React.useState([]);
@@ -54,32 +56,61 @@ export default function ListDetailComponent() {
         maxHeight: "80vh",
       }}
     >
-      <Typography
-        variant="h4"
-        component="h1"
-        gutterBottom
+      <Box
         sx={{
-          fontSize: {
-            xl: "2rem",
-            lg: "2rem",
-            md: "2rem",
-            sm: "1.5rem",
-            xs: "1rem",
-          },
+          display: "flex", // Aktivuje flexbox
+          alignItems: "center", // Vertikálně vycentruje položky
+          width: "100%", // Nastaví šířku na 100% kontejneru
+          justifyContent: "center", // Zarovná položky na střed horizontálně
           top: 40,
+
           position: "absolute",
-          whiteSpace: "nowrap",
-          fontFamily: "Edu TAS Beginner",
-          color: "rgba(80, 2, 99, 1)",
-          border: 2,
-          borderColor: "rgba(80, 2, 99, 1)",
-          borderRadius: 6,
-          padding: 1,
-          backgroundColor: "rgba(80, 2, 99, 0.1)",
         }}
       >
-        Název Nákupního Seznam
-      </Typography>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{
+            ml: 1, // Přidává margin vlevo
+            fontSize: {
+              xl: "2rem",
+              lg: "2rem",
+              md: "2rem",
+              sm: "1.5rem",
+              xs: "1rem",
+            },
+            fontFamily: "Edu TAS Beginner",
+            color: "rgba(80, 2, 99, 1)",
+            border: 2,
+            borderColor: "rgba(80, 2, 99, 1)",
+            borderRadius: 6,
+            padding: 1,
+            backgroundColor: "rgba(80, 2, 99, 0.1)",
+          }}
+        >
+          Název Nákupního Seznamu
+        </Typography>
+
+        <EditIcon
+          sx={{
+            ml: { xl: 2, lg: 2, md: 2, sm: 1.5, xs: 1 },
+            mb: 0.5,
+            border: 2,
+            borderColor: "rgba(80, 2, 99, 1)",
+            borderRadius: 5,
+            padding: 1,
+            backgroundColor: "rgba(80, 2, 99, 0.05",
+            fontSize: {
+              xl: "2rem",
+              lg: "2rem",
+              md: "2rem",
+              sm: "1.5rem",
+              xs: "1.2rem",
+            },
+          }}
+        />
+      </Box>
       <List
         sx={{
           width: "100%",

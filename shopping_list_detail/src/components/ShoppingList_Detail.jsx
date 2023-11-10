@@ -7,14 +7,11 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
-import Divider from "@mui/material/Divider";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import Tooltip from "@mui/material/Tooltip";
-import { borderColor } from "@mui/system";
 
 export default function ListDetailComponent() {
   const [items, setItems] = React.useState([]);
@@ -28,6 +25,7 @@ export default function ListDetailComponent() {
   const [isMember, setIsMember] = useState(true);
   const [filter, setFilter] = useState("all");
 
+  // Funkce pro přidání položky
   const handleAddItem = () => {
     if (inputValue) {
       setItems([...items, { name: inputValue, inBasket: false }]);
@@ -35,11 +33,13 @@ export default function ListDetailComponent() {
     }
   };
 
+  // Funkce pro smazání položky
   const handleDeleteItem = (index) => {
     const newItems = items.filter((_, i) => i !== index);
     setItems(newItems);
   };
 
+  // Funkce pro změnu stavu položky
   const handleToggleInBasket = (index) => {
     setItems(
       items.map((item, i) => {
@@ -51,9 +51,10 @@ export default function ListDetailComponent() {
     );
   };
 
+  // Funkce pro editaci
   const handleEditListName = () => {
     if (!isEditing) {
-      setOriginalListName(listName); // Uloží původní hodnotu před začátkem editace
+      setOriginalListName(listName);
     }
     setIsEditing(!isEditing);
   };
@@ -61,6 +62,7 @@ export default function ListDetailComponent() {
     setListName(e.target.value);
   };
 
+  // Funkce pro zrušení editace
   function checkEmptyName(event) {
     const newName = event.target.value;
     if (newName.trim() === "") {
@@ -68,10 +70,12 @@ export default function ListDetailComponent() {
     }
   }
 
+  // Funkce pro změnu Vlastníka / Člena
   const toggleRole = () => {
     setIsOwner(!isOwner);
   };
 
+  // Funkce pro přidání člena
   const handleAddMember = () => {
     if (newMemberName) {
       setMembers([...members, newMemberName]);
@@ -79,19 +83,31 @@ export default function ListDetailComponent() {
     }
   };
 
+  // Funkce pro smazání člena
   const handleDeleteMember = (index) => {
     setMembers(members.filter((_, i) => i !== index));
   };
 
+  // Funkce pro změnu stavu člena (později na odchod ze seznamu)
   const handleLeaveList = () => {
     setIsMember(false);
   };
 
-  const handleFilterChange = (newFilter) => {
-    setFilter(newFilter);
+  // Funkce pro změnu filtru
+  const getFilteredItems = () => {
+    switch (filter) {
+      case "all":
+        return items;
+      case "done":
+        return items.filter((item) => item.inBasket);
+      case "undone":
+        return items.filter((item) => !item.inBasket);
+      default:
+        return items;
+    }
   };
-
   return (
+    // Box obalující vsechny komponenty
     <Box
       sx={{
         p: 2,
@@ -122,16 +138,21 @@ export default function ListDetailComponent() {
           width: "100%",
           top: 40,
           position: "absolute",
+          zIndex: 1,
         }}
       >
         {!isOwner && isMember && (
           <Button
-            onClick={handleLeaveList} // Přidání onClick události
+            onClick={handleLeaveList}
             sx={{
               color: "rgba(80, 2, 99, 1)",
               border: 2,
               borderColor: "#e00914",
               backgroundColor: "rgba(255, 0, 0, 0.75)",
+              position: "absolute",
+
+              top: "58vh",
+              right: "4vw",
               "&:hover": {
                 backgroundColor: "#c00712",
               },
@@ -139,8 +160,6 @@ export default function ListDetailComponent() {
               fontSize: "1.1rem",
               borderRadius: 4,
               minWidth: "auto",
-              position: "absolute",
-              right: { xl: 80 },
             }}
           >
             Odejít ze seznamu
@@ -177,6 +196,92 @@ export default function ListDetailComponent() {
             <ListAltIcon />
           </IconButton>
         </Tooltip>
+        <Box
+          sx={{
+            position: "absolute",
+            top: { xl: 12, lg: 28, md: 12, sm: 12, xs: 12 },
+            right: { xl: "4vw", lg: "2vw", md: "4vw", sm: "4vw", xs: "4vw" },
+          }}
+        >
+          <Typography
+            sx={{
+              color: "rgba(80, 2, 99, 1)",
+              fontSize: {
+                xl: "1.5rem",
+                lg: "1.2rem",
+                md: "2rem",
+                sm: "1.5rem",
+                xs: "1.2rem",
+              },
+              fontWeight: "bold",
+              paddingBottom: 1,
+              paddingLeft: { xl: 0, lg: 11 },
+            }}
+          >
+            {" "}
+            Filtrovat:{" "}
+          </Typography>
+          <Button
+            sx={{
+              border: 2,
+              borderRadius: 6,
+              borderColor: "rgba(80, 2, 99, 1)",
+              backgroundColor: "rgba(80, 2, 99, 0.3)",
+              color: "rgba(80, 2, 99, 1)",
+              fontSize: {
+                xl: "1.1rem",
+                lg: "0.8rem",
+                md: "0.6rem",
+                sm: "0.6rem",
+                xs: "0.6rem",
+              },
+              mr: 1,
+            }}
+            onClick={() => setFilter("all")}
+          >
+            Vše
+          </Button>
+          <Button
+            sx={{
+              border: 2,
+              borderRadius: 6,
+              borderColor: "rgba(80, 2, 99, 1)",
+              backgroundColor: "rgba(80, 2, 99, 0.3)",
+              color: "rgba(80, 2, 99, 1)",
+              fontSize: {
+                xl: "1.1rem",
+                lg: "0.8rem",
+                md: "0.6rem",
+                sm: "0.6rem",
+                xs: "0.6rem",
+              },
+              mr: 1,
+            }}
+            onClick={() => setFilter("done")}
+          >
+            Hotovo
+          </Button>
+          <Button
+            sx={{
+              border: 2,
+              borderRadius: 6,
+              borderColor: "rgba(80, 2, 99, 1)",
+              backgroundColor: "rgba(80, 2, 99, 0.3)",
+              color: "rgba(80, 2, 99, 1)",
+              fontSize: {
+                xl: "1.1rem",
+                lg: "0.8rem",
+                md: "0.6rem",
+                sm: "0.6rem",
+                xs: "0.6rem",
+              },
+              mr: 1,
+            }}
+            onClick={() => setFilter("undone")}
+          >
+            Nedokončeno
+          </Button>
+        </Box>
         {isEditing ? (
           <TextField
             value={listName}
@@ -187,18 +292,13 @@ export default function ListDetailComponent() {
             }}
             autoFocus
             size="small"
-            sx={
-              {
-                // další styly pro TextField
-              }
-            }
+            sx={{}}
           />
         ) : (
           <Typography
             variant="h4"
             component="h1"
             gutterBottom
-            //onClick={handleEditListName}
             sx={{
               fontSize: {
                 xl: "2rem",
@@ -214,8 +314,6 @@ export default function ListDetailComponent() {
               borderRadius: 6,
               padding: 1,
               backgroundColor: "rgba(80, 2, 99, 0.1)",
-
-              // další styly pro Typography
             }}
           >
             {listName}
@@ -253,7 +351,7 @@ export default function ListDetailComponent() {
             xs: "0.6rem",
           },
           position: "absolute",
-          top: 6,
+          top: 0,
           left: { xs: "65%", md: "55%", lg: "55%", xl: "55%" },
         }}
       >
@@ -264,8 +362,7 @@ export default function ListDetailComponent() {
           sx={{
             fontSize: "1rem",
             position: "absolute",
-            top: 12,
-
+            top: 2,
             fontWeight: "bold",
           }}
         >
@@ -276,8 +373,7 @@ export default function ListDetailComponent() {
           sx={{
             fontSize: "1rem",
             position: "absolute",
-            top: 12,
-
+            top: 2,
             fontWeight: "bold",
           }}
         >
@@ -308,10 +404,16 @@ export default function ListDetailComponent() {
           borderColor: "rgba(80, 2, 99, 1)",
           borderRadius: 5,
           p: 1,
-          maxHeight: { xs: "11.8rem", xl: "30.7rem" },
-          minHeight: { xs: "11.8rem", xl: "30.7rem" },
+          maxHeight: { xs: "11.8rem", xl: "40vmax" },
+          minHeight: {
+            xs: "11.8rem",
+            xl: "40vmin",
+            lg: "37vmin",
+            md: "37vmin",
+          },
           position: "absolute",
           top: 150,
+          zIndex: 1,
           overflow: "auto",
           fontFamily: "Edu TAS Beginner",
           fontWeight: "bold",
@@ -324,52 +426,52 @@ export default function ListDetailComponent() {
           },
         }}
       >
-        {items
-          .filter((item) => !item.inBasket)
-          .map((item, index) => (
-            <ListItem
+        {getFilteredItems().map((item, index) => (
+          <ListItem
+            key={index}
+            sx={{
+              borderBottom: 2,
+              mb: 0.5,
+              borderRadius: 0,
+              borderColor: "rgba(80, 2, 99, 0.5)",
+              zIndex: 1,
+              display: "flex",
+            }}
+          >
+            <IconButton
+              edge="start"
+              aria-label="mark-as-done"
+              onClick={() => handleToggleInBasket(index)}
               sx={{
-                borderBottom: 2,
-                mb: 0.5,
-                borderRadius: 0,
-                borderColor: "rgba(80, 2, 99, 0.5)",
-                zIndex: 1,
-                display: "flex",
+                mr: 2,
               }}
-              key={index}
             >
-              <IconButton
-                edge="start"
-                aria-label="mark-as-done"
-                onClick={() => handleToggleInBasket(index)}
-                sx={{ mr: 2 }}
-              >
-                <CheckIcon
-                  sx={{
-                    fontSize: "1.6rem",
-                    border: 2,
-                    borderColor: "rgba(80, 2, 99, 1)",
-                    borderRadius: 2,
-                  }}
-                  color={item.inBasket ? "primary" : "inherit"}
-                />
-              </IconButton>
+              <CheckIcon
+                sx={{
+                  fontSize: "1.5rem",
+                  border: item.inBasket ? 3 : 2,
+                  borderColor: "rgba(80, 2, 99, 1)",
+                  borderRadius: 2,
+                  backgroundColor: item.inBasket
+                    ? "rgba(80, 2, 99, 0.3)"
+                    : "transparent",
+                }}
+                color={item.inBasket ? "primary" : "inherit"}
+              />
+            </IconButton>
 
-              {item.name}
+            {item.name}
 
-              {/* Tlačítko pro odstranění položky, zobrazené pouze pro vlastníka */}
-              {isOwner && (
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() => handleDeleteItem(index)}
-                  sx={{ color: "#e00914", marginLeft: "auto" }} // Přidán marginLeft: 'auto' pro zarovnání vpravo
-                >
-                  <DeleteForeverIcon />
-                </IconButton>
-              )}
-            </ListItem>
-          ))}
+            <IconButton
+              edge="end"
+              aria-label="delete"
+              onClick={() => handleDeleteItem(index)}
+              sx={{ color: "#e00914", marginLeft: "auto", marginRight: 1 }}
+            >
+              <DeleteForeverIcon />
+            </IconButton>
+          </ListItem>
+        ))}
       </List>
       {isOwner && (
         <Box
@@ -437,10 +539,10 @@ export default function ListDetailComponent() {
 
       <Typography
         sx={{
-          fontSize: "1.4rem",
+          fontSize: { xl: "1.4rem", lg: "1.2rem" },
           position: "absolute",
           bottom: 14,
-          right: 80,
+          right: { xl: 80, lg: 24, md: 24, sm: 24, xs: 24 },
           fontWeight: "bold",
         }}
       >
@@ -456,7 +558,7 @@ export default function ListDetailComponent() {
             xs: "1.2rem",
           },
           position: "absolute",
-          bottom: { xl: 280, lg: 100, md: 100, sm: 100, xs: 100 },
+          bottom: { xl: "25vh", lg: "31vh", md: "31vh", sm: 100, xs: 100 },
           left: { xl: 66, lg: 24, md: 24, sm: 24, xs: 24 },
           fontWeight: "bold",
         }}
@@ -470,8 +572,8 @@ export default function ListDetailComponent() {
           borderColor: "rgba(80, 2, 99, 1)",
           borderRadius: 5,
           p: 1,
-          maxHeight: { xs: "11.8rem", xl: "10.8rem" },
-          minHeight: { xs: "11.8rem", xl: "10.8rem" },
+          maxHeight: { xs: "11.8rem", xl: "15vh" },
+          minHeight: { xs: "11.8rem", xl: "15vh" },
           position: "absolute",
           bottom: 70,
           overflow: "auto",
@@ -503,7 +605,7 @@ export default function ListDetailComponent() {
                 edge="end"
                 aria-label="delete"
                 onClick={() => handleDeleteMember(index)}
-                sx={{ color: "#e00914" }}
+                sx={{ right: 40, color: "#e00914", position: "absolute" }}
               >
                 <DeleteForeverIcon />
               </IconButton>
@@ -526,7 +628,13 @@ export default function ListDetailComponent() {
           sx={{
             display: "flex",
             position: "absolute",
-            bottom: 213,
+            bottom: {
+              xl: "21vh",
+              lg: "24.5vh",
+              md: "24.5vh",
+              sm: 100,
+              xs: 100,
+            },
           }}
         >
           <TextField
@@ -542,7 +650,7 @@ export default function ListDetailComponent() {
                 xs: "44vw",
                 sm: "10rem",
                 md: "10rem",
-                lg: "10rem",
+                lg: "15rem",
                 xl: "20rem",
               },
               "& .MuiOutlinedInput-root": {
@@ -594,18 +702,3 @@ export default function ListDetailComponent() {
     </Box>
   );
 }
-
-// Divider šablona:
-
-/*<Divider
-        sx={{
-          width: "90%",
-          position: "absolute",
-          bottom: 330,
-          zIndex: 2,
-          backgroundColor: "rgba(80, 2, 99, 1)",
-          borderRadius: 2,
-          height: "4px",
-        }}
-      />
-*/

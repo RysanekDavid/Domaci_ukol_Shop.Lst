@@ -14,6 +14,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useState, useEffect } from "react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import Tooltip from "@mui/material/Tooltip";
+import { borderColor } from "@mui/system";
 
 export default function ListDetailComponent() {
   const [items, setItems] = React.useState([]);
@@ -24,6 +25,8 @@ export default function ListDetailComponent() {
   const [isOwner, setIsOwner] = useState(true);
   const [members, setMembers] = useState([]);
   const [newMemberName, setNewMemberName] = useState("");
+  const [isMember, setIsMember] = useState(true);
+  const [filter, setFilter] = useState("all");
 
   const handleAddItem = () => {
     if (inputValue) {
@@ -38,10 +41,14 @@ export default function ListDetailComponent() {
   };
 
   const handleToggleInBasket = (index) => {
-    const newItems = items.map((item, i) =>
-      i === index ? { ...item, inBasket: !item.inBasket } : item
+    setItems(
+      items.map((item, i) => {
+        if (i === index) {
+          return { ...item, inBasket: !item.inBasket };
+        }
+        return item;
+      })
     );
-    setItems(newItems);
   };
 
   const handleEditListName = () => {
@@ -76,6 +83,14 @@ export default function ListDetailComponent() {
     setMembers(members.filter((_, i) => i !== index));
   };
 
+  const handleLeaveList = () => {
+    setIsMember(false);
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+  };
+
   return (
     <Box
       sx={{
@@ -96,6 +111,7 @@ export default function ListDetailComponent() {
         minWidth: { xl: "80%", lg: "70%", md: "90%", sm: "70%", xs: "80%" },
         minHeight: "90vh",
         maxHeight: "80vh",
+        zIndex: 0,
       }}
     >
       <Box
@@ -108,6 +124,35 @@ export default function ListDetailComponent() {
           position: "absolute",
         }}
       >
+        {!isOwner && isMember && (
+          <Button
+            onClick={handleLeaveList} // Přidání onClick události
+            sx={{
+              color: "rgba(80, 2, 99, 1)",
+              border: 2,
+              borderColor: "#e00914",
+              backgroundColor: "rgba(255, 0, 0, 0.75)",
+              "&:hover": {
+                backgroundColor: "#c00712",
+              },
+              textTransform: "none",
+              fontSize: "1.1rem",
+              borderRadius: 4,
+              minWidth: "auto",
+              position: "absolute",
+              right: { xl: 80 },
+            }}
+          >
+            Odejít ze seznamu
+          </Button>
+        )}
+
+        {!isMember && (
+          <p>
+            <h2>Opustili jste seznam.</h2>
+          </p>
+        )}
+
         <Tooltip title="TO DO -> Všechny seznamy">
           <IconButton
             sx={{
@@ -153,7 +198,7 @@ export default function ListDetailComponent() {
             variant="h4"
             component="h1"
             gutterBottom
-            onClick={handleEditListName}
+            //onClick={handleEditListName}
             sx={{
               fontSize: {
                 xl: "2rem",
@@ -208,20 +253,19 @@ export default function ListDetailComponent() {
             xs: "0.6rem",
           },
           position: "absolute",
-          top: 120,
-          right: 8,
+          top: 6,
+          left: { xs: "65%", md: "55%", lg: "55%", xl: "55%" },
         }}
       >
         {isOwner ? "Změna" : "Změna"}
       </Button>
-
       {isOwner ? (
         <Typography
           sx={{
             fontSize: "1rem",
             position: "absolute",
-            top: 154,
-            right: 14,
+            top: 12,
+
             fontWeight: "bold",
           }}
         >
@@ -232,63 +276,109 @@ export default function ListDetailComponent() {
           sx={{
             fontSize: "1rem",
             position: "absolute",
-            top: 154,
-            right: 24,
+            top: 12,
+
             fontWeight: "bold",
           }}
         >
           Člen
         </Typography>
       )}
-      <List
+      <Typography
         sx={{
-          width: "100%",
-          fontFamily: "Edu TAS Beginner",
           fontSize: {
-            xl: "2rem",
+            xl: "1.6rem",
             lg: "2rem",
             md: "2rem",
             sm: "1.5rem",
-            xs: "1.6rem",
+            xs: "1.2rem",
+          },
+          position: "absolute",
+          top: { xl: 100, lg: 100, md: 100, sm: 100, xs: 100 },
+          left: { xl: 66, lg: 24, md: 24, sm: 24, xs: 24 },
+          fontWeight: "bold",
+        }}
+      >
+        Koupit:
+      </Typography>
+      <List
+        sx={{
+          width: "90%",
+          border: 4,
+          borderColor: "rgba(80, 2, 99, 1)",
+          borderRadius: 5,
+          p: 1,
+          maxHeight: { xs: "11.8rem", xl: "30.7rem" },
+          minHeight: { xs: "11.8rem", xl: "30.7rem" },
+          position: "absolute",
+          top: 150,
+          overflow: "auto",
+          fontFamily: "Edu TAS Beginner",
+          fontWeight: "bold",
+          fontSize: {
+            xl: "1.8rem",
+            lg: "2rem",
+            md: "2rem",
+            sm: "1.5rem",
+            xs: "1.24rem",
           },
         }}
       >
-        {items.map((item, index) => (
-          <ListItem
-            key={index}
-            secondaryAction={
-              <>
-                <IconButton
-                  edge="end"
-                  aria-label="in-basket"
-                  onClick={() => handleToggleInBasket(index)}
-                >
-                  <CheckIcon color={item.inBasket ? "primary" : "disabled"} />
-                </IconButton>
+        {items
+          .filter((item) => !item.inBasket)
+          .map((item, index) => (
+            <ListItem
+              sx={{
+                borderBottom: 2,
+                mb: 0.5,
+                borderRadius: 0,
+                borderColor: "rgba(80, 2, 99, 0.5)",
+                zIndex: 1,
+                display: "flex",
+              }}
+              key={index}
+            >
+              <IconButton
+                edge="start"
+                aria-label="mark-as-done"
+                onClick={() => handleToggleInBasket(index)}
+                sx={{ mr: 2 }}
+              >
+                <CheckIcon
+                  sx={{
+                    fontSize: "1.6rem",
+                    border: 2,
+                    borderColor: "rgba(80, 2, 99, 1)",
+                    borderRadius: 2,
+                  }}
+                  color={item.inBasket ? "primary" : "inherit"}
+                />
+              </IconButton>
+
+              {item.name}
+
+              {/* Tlačítko pro odstranění položky, zobrazené pouze pro vlastníka */}
+              {isOwner && (
                 <IconButton
                   edge="end"
                   aria-label="delete"
                   onClick={() => handleDeleteItem(index)}
-                  sx={{
-                    color: "#e00914",
-                  }}
+                  sx={{ color: "#e00914", marginLeft: "auto" }} // Přidán marginLeft: 'auto' pro zarovnání vpravo
                 >
                   <DeleteForeverIcon />
                 </IconButton>
-              </>
-            }
-          >
-            {item.name}
-          </ListItem>
-        ))}
+              )}
+            </ListItem>
+          ))}
       </List>
-
       {isOwner && (
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            // ... (další styly)
+            position: "absolute",
+            bottom: 12,
+            zIndex: 2,
           }}
         >
           <TextField
@@ -299,7 +389,7 @@ export default function ListDetailComponent() {
             sx={{
               ml: 1,
               mr: 1,
-              minWidth: "10%",
+              minWidth: "5rem",
               "& .MuiOutlinedInput-root": {
                 color: "rgba(80, 2, 99,0.8)", // Barva textu
                 "& fieldset": {
@@ -323,8 +413,9 @@ export default function ListDetailComponent() {
             onClick={handleAddMember}
             size="medium"
             sx={{
-              minWidth: "10%",
+              minWidth: "4rem",
               mr: 1,
+
               border: 2,
               color: "white",
               fontWeight: "bold",
@@ -344,42 +435,98 @@ export default function ListDetailComponent() {
         </Box>
       )}
 
-      {isOwner && (
-        <List>
-          {members.map((member, index) => (
-            <ListItem key={index}>
-              {member}
+      <Typography
+        sx={{
+          fontSize: "1.4rem",
+          position: "absolute",
+          bottom: 14,
+          right: 80,
+          fontWeight: "bold",
+        }}
+      >
+        Vlastník: David Ryšánek
+      </Typography>
+      <Typography
+        sx={{
+          fontSize: {
+            xl: "1.6rem",
+            lg: "2rem",
+            md: "2rem",
+            sm: "1.5rem",
+            xs: "1.2rem",
+          },
+          position: "absolute",
+          bottom: { xl: 280, lg: 100, md: 100, sm: 100, xs: 100 },
+          left: { xl: 66, lg: 24, md: 24, sm: 24, xs: 24 },
+          fontWeight: "bold",
+        }}
+      >
+        Seznam členů:
+      </Typography>
+      <List
+        sx={{
+          width: "90%",
+          border: 4,
+          borderColor: "rgba(80, 2, 99, 1)",
+          borderRadius: 5,
+          p: 1,
+          maxHeight: { xs: "11.8rem", xl: "10.8rem" },
+          minHeight: { xs: "11.8rem", xl: "10.8rem" },
+          position: "absolute",
+          bottom: 70,
+          overflow: "auto",
+          fontFamily: "Edu TAS Beginner",
+          fontSize: {
+            xl: "1.6rem",
+            lg: "2rem",
+            md: "2rem",
+            sm: "1.5rem",
+            xs: "1.24rem",
+          },
+        }}
+      >
+        {members.map((member, index) => (
+          <ListItem
+            sx={{
+              borderBottom: 2,
+              mb: 0.5,
+              borderRadius: 0,
+              borderColor: "rgba(80, 2, 99, 0.5)",
+              zIndex: 1,
+            }}
+            key={index}
+          >
+            {member}
+
+            {isOwner && (
               <IconButton
                 edge="end"
                 aria-label="delete"
                 onClick={() => handleDeleteMember(index)}
-                sx={{}}
+                sx={{ color: "#e00914" }}
               >
                 <DeleteForeverIcon />
               </IconButton>
-            </ListItem>
-          ))}
-        </List>
-      )}
-
-      <Divider sx={{ width: "100%", position: "absolute", bottom: 80 }} />
-
+            )}
+          </ListItem>
+        ))}
+      </List>
       <Box
         sx={{
-          mt: 2,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "space-between",
           maxWidth: "100%",
+          position: "absolute",
+          bottom: 70,
         }}
       >
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
             position: "absolute",
-            bottom: 20,
+            bottom: 213,
           }}
         >
           <TextField
@@ -388,9 +535,16 @@ export default function ListDetailComponent() {
             variant="outlined"
             size="small"
             sx={{
-              ml: 1,
+              ml: 2,
               mr: 1,
-              minWidth: "10%",
+
+              minWidth: {
+                xs: "44vw",
+                sm: "10rem",
+                md: "10rem",
+                lg: "10rem",
+                xl: "20rem",
+              },
               "& .MuiOutlinedInput-root": {
                 color: "rgba(80, 2, 99,0.8)", // Barva textu
                 "& fieldset": {
@@ -417,7 +571,7 @@ export default function ListDetailComponent() {
             onClick={handleAddItem}
             size="medium"
             sx={{
-              minWidth: "10%",
+              minWidth: "4rem",
               mr: 1,
               border: 2,
               color: "white",
@@ -440,3 +594,18 @@ export default function ListDetailComponent() {
     </Box>
   );
 }
+
+// Divider šablona:
+
+/*<Divider
+        sx={{
+          width: "90%",
+          position: "absolute",
+          bottom: 330,
+          zIndex: 2,
+          backgroundColor: "rgba(80, 2, 99, 1)",
+          borderRadius: 2,
+          height: "4px",
+        }}
+      />
+*/

@@ -671,9 +671,9 @@ export default function ListDetailComponent() {
             display: "flex",
             position: "absolute",
             bottom: {
-              xl: "25vh",
-              lg: "28vh",
-              md: "28vh",
+              xl: "22vh",
+              lg: "26vh",
+              md: "26vh",
               sm: "21vh",
               xs: "24vh",
             },

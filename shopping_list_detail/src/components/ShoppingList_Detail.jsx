@@ -199,8 +199,9 @@ export default function ListDetailComponent() {
         <Box
           sx={{
             position: "absolute",
-            top: { xl: 12, lg: 28, md: 12, sm: 12, xs: 12 },
-            right: { xl: "4vw", lg: "2vw", md: "4vw", sm: "4vw", xs: "4vw" },
+            top: { xl: 12, lg: 28, md: 28, sm: 70, xs: 55 },
+            right: { xl: "4vw", lg: "2vw", md: "4vw", sm: "4vw", xs: "1vw" },
+            whiteSpace: "nowrap",
           }}
         >
           <Typography
@@ -209,13 +210,22 @@ export default function ListDetailComponent() {
               fontSize: {
                 xl: "1.5rem",
                 lg: "1.2rem",
-                md: "2rem",
+                md: "1.4rem",
                 sm: "1.5rem",
                 xs: "1.2rem",
               },
               fontWeight: "bold",
-              paddingBottom: 1,
-              paddingLeft: { xl: 0, lg: 11 },
+              marginBottom: 1,
+              marginLeft: { xl: 0, lg: 11, md: 4 },
+
+              paddingLeft: { xl: 0, lg: 1, md: 4 },
+              display: {
+                xl: "flex",
+                lg: "flex",
+                md: "flex",
+                sm: "none",
+                xs: "none",
+              },
             }}
           >
             {" "}
@@ -305,7 +315,7 @@ export default function ListDetailComponent() {
                 lg: "2rem",
                 md: "2rem",
                 sm: "1.5rem",
-                xs: "5.4vw",
+                xs: "4.6vw",
               },
               fontFamily: "Edu TAS Beginner",
               color: "rgba(80, 2, 99, 1)",
@@ -384,13 +394,13 @@ export default function ListDetailComponent() {
         sx={{
           fontSize: {
             xl: "1.6rem",
-            lg: "2rem",
-            md: "2rem",
-            sm: "1.5rem",
-            xs: "1.2rem",
+            lg: "1.5rem",
+            md: "1.5rem",
+            sm: "1.4rem",
+            xs: "1.1rem",
           },
           position: "absolute",
-          top: { xl: 100, lg: 100, md: 100, sm: 100, xs: 100 },
+          top: { xl: 100, lg: 100, md: 90, sm: 110, xs: 125 },
           left: { xl: 66, lg: 24, md: 24, sm: 24, xs: 24 },
           fontWeight: "bold",
         }}
@@ -404,12 +414,19 @@ export default function ListDetailComponent() {
           borderColor: "rgba(80, 2, 99, 1)",
           borderRadius: 5,
           p: 1,
-          maxHeight: { xs: "11.8rem", xl: "40vmax" },
-          minHeight: {
+          maxHeight: {
+            xl: "40vmax",
+            lg: "37vh",
+            md: "37vh",
+            sm: "32vh",
             xs: "11.8rem",
-            xl: "40vmin",
-            lg: "37vmin",
-            md: "37vmin",
+          },
+          minHeight: {
+            xs: "28vh",
+            xl: "40vh",
+            lg: "37vh",
+            md: "37vh",
+            sm: "32vh",
           },
           position: "absolute",
           top: 150,
@@ -544,6 +561,13 @@ export default function ListDetailComponent() {
           bottom: 14,
           right: { xl: 80, lg: 24, md: 24, sm: 24, xs: 24 },
           fontWeight: "bold",
+          display: {
+            xl: "flex",
+            lg: "flex",
+            md: "flex",
+            sm: "none",
+            xs: "none",
+          },
         }}
       >
         Vlastník: David Ryšánek
@@ -552,13 +576,19 @@ export default function ListDetailComponent() {
         sx={{
           fontSize: {
             xl: "1.6rem",
-            lg: "2rem",
-            md: "2rem",
-            sm: "1.5rem",
+            lg: "1.5rem",
+            md: "1.5rem",
+            sm: "1.4rem",
             xs: "1.2rem",
           },
           position: "absolute",
-          bottom: { xl: "25vh", lg: "31vh", md: "31vh", sm: 100, xs: 100 },
+          bottom: {
+            xl: "25vh",
+            lg: "27vh",
+            md: "28vh",
+            sm: "26vh",
+            xs: "27vh",
+          },
           left: { xl: 66, lg: 24, md: 24, sm: 24, xs: 24 },
           fontWeight: "bold",
         }}
@@ -572,8 +602,20 @@ export default function ListDetailComponent() {
           borderColor: "rgba(80, 2, 99, 1)",
           borderRadius: 5,
           p: 1,
-          maxHeight: { xs: "11.8rem", xl: "15vh" },
-          minHeight: { xs: "11.8rem", xl: "15vh" },
+          maxHeight: {
+            xl: "15vh",
+            lg: "15vh",
+            md: "15vh",
+            sm: "12vh",
+            xs: "12.6vh",
+          },
+          minHeight: {
+            xl: "15vh",
+            lg: "15vh",
+            md: "15vh",
+            sm: "10vh",
+            xs: "12vh",
+          },
           position: "absolute",
           bottom: 70,
           overflow: "auto",
@@ -629,11 +671,11 @@ export default function ListDetailComponent() {
             display: "flex",
             position: "absolute",
             bottom: {
-              xl: "21vh",
-              lg: "24.5vh",
-              md: "24.5vh",
-              sm: 100,
-              xs: 100,
+              xl: "25vh",
+              lg: "28vh",
+              md: "28vh",
+              sm: "21vh",
+              xs: "24vh",
             },
           }}
         >

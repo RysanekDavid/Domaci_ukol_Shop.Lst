@@ -1,12 +1,17 @@
 import "./App.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React from "react";
+import ShoppingListsOverview from "./components/AllLists.jsx";
 import HomePage from "./components/ShoppingList_Detail.jsx";
 
 function App() {
   return (
-    <div>
-      <HomePage></HomePage>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/detail/:id" element={<HomePage />} />
+        <Route path="/" element={<ShoppingListsOverview />} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -12,6 +12,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import Tooltip from "@mui/material/Tooltip";
+import { useNavigate } from "react-router-dom";
 
 export default function ListDetailComponent() {
   const [items, setItems] = React.useState([]);
@@ -24,6 +25,7 @@ export default function ListDetailComponent() {
   const [newMemberName, setNewMemberName] = useState("");
   const [isMember, setIsMember] = useState(true);
   const [filter, setFilter] = useState("all");
+  const navigate = useNavigate();
 
   // Funkce pro přidání položky
   const handleAddItem = () => {
@@ -33,6 +35,9 @@ export default function ListDetailComponent() {
     }
   };
 
+  const navigateToHome = () => {
+    navigate("/"); // přesměruje na domovskou stránku
+  };
   // Funkce pro smazání položky
   const handleDeleteItem = (index) => {
     const newItems = items.filter((_, i) => i !== index);
@@ -172,8 +177,9 @@ export default function ListDetailComponent() {
           </p>
         )}
 
-        <Tooltip title="TO DO -> Všechny seznamy">
+        <Tooltip title="Všechny Seznamy">
           <IconButton
+            onClick={navigateToHome}
             sx={{
               ml: 1,
               mr: 1,
@@ -183,7 +189,7 @@ export default function ListDetailComponent() {
               borderRadius: 5,
               padding: 1,
 
-              backgroundColor: "rgba(255, 0, 0, 0.45)",
+              backgroundColor: "rgba(80, 2, 99, 0.2)",
               fontSize: {
                 xl: "2rem",
                 lg: "2rem",
@@ -193,7 +199,7 @@ export default function ListDetailComponent() {
               },
             }}
           >
-            <ListAltIcon />
+            <ListAltIcon sx={{ color: "rgba(80, 2, 99, 1)" }} />
           </IconButton>
         </Tooltip>
         <Box
@@ -339,7 +345,7 @@ export default function ListDetailComponent() {
               border: 2,
               borderColor: "rgba(80, 2, 99, 1)",
               borderRadius: 5,
-              backgroundColor: "rgba(80, 2, 99, 0.05)",
+              backgroundColor: "rgba(80, 2, 99, 0.2)",
               fontSize: {
                 xl: "2rem",
                 lg: "2rem",
@@ -349,7 +355,7 @@ export default function ListDetailComponent() {
               },
             }}
           >
-            <EditIcon />
+            <EditIcon sx={{ color: "rgba(80, 2, 99, 1)" }} />
           </IconButton>
         )}
       </Box>

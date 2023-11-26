@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React from "react";
-import ShoppingListsOverview from "./components/AllLists.jsx";
+import ShoppingListsOverview from "./components/AllLists/AllLists.jsx";
 import HomePage from "./components/ShoppingList_Detail.jsx";
 
 function App() {

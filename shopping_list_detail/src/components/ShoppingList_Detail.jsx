@@ -317,13 +317,14 @@ export default function ListDetailComponent() {
             gutterBottom
             sx={{
               fontSize: {
-                xl: "2rem",
-                lg: "2rem",
-                md: "2rem",
+                xl: "1.8rem",
+                lg: "1.6rem",
+                md: "1.6rem",
                 sm: "1.5rem",
                 xs: "4.6vw",
               },
-              fontFamily: "Edu TAS Beginner",
+              fontFamily: "Roboto Slab",
+              fontWeight: "bold",
               color: "rgba(80, 2, 99, 1)",
               border: 2,
               borderColor: "rgba(80, 2, 99, 1)",

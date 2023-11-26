@@ -428,14 +428,14 @@ export default function ListDetailComponent() {
           borderRadius: 5,
           p: 1,
           maxHeight: {
-            xl: "40vmax",
+            xl: "40vh",
             lg: "37vh",
             md: "37vh",
             sm: "32vh",
-            xs: "11.8rem",
+            xs: "31vh",
           },
           minHeight: {
-            xs: "28vh",
+            xs: "30vh",
             xl: "40vh",
             lg: "37vh",
             md: "37vh",

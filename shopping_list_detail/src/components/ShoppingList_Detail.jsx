@@ -13,11 +13,15 @@ import { useState } from "react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function ListDetailComponent() {
+  const location = useLocation();
   const [items, setItems] = React.useState([]);
   const [inputValue, setInputValue] = React.useState("");
-  const [listName, setListName] = useState("Název Seznamu");
+  const [listName, setListName] = useState(
+    location.state?.listName || "Název Seznamu"
+  );
   const [isEditing, setIsEditing] = useState(false);
   const [originalListName, setOriginalListName] = useState(listName);
   const [isOwner, setIsOwner] = useState(true);
@@ -72,6 +76,8 @@ export default function ListDetailComponent() {
     const newName = event.target.value;
     if (newName.trim() === "") {
       setListName(originalListName);
+    } else {
+      setListName(newName);
     }
   }
 

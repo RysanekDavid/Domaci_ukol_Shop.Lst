@@ -9,33 +9,45 @@ export function FilterComponent({ setFilter }) {
       sx={{
         display: "flex",
         gap: 2,
-        position: "absolute",
-        borderRadius: 6,
-        zIndex: 1,
-        mt: 3,
+        position: "sticky",
+        top: 0,
+        mt: 6,
+        zIndex: 3,
         border: 5,
         borderColor: "rgba(80, 2, 99, 1)",
-
-        top: 0,
+        borderRadius: 6,
         pb: 2,
         pt: 2,
+        pl: { xs: 4 },
         backgroundColor: "black",
+        maxWidth: "90%",
+
+        justifyContent: "center",
+
+        ml: "auto",
+        mr: "auto",
       }}
     >
       <Typography
         sx={{
-          color: "rgba(199, 180, 209)",
+          color: "rgba(199, 180, 209,1)",
           fontSize: {
             xl: "1.5rem",
             lg: "1.2rem",
             md: "1.4rem",
             sm: "1.5rem",
-            xs: "1.2rem",
+          },
+          display: {
+            xs: "none",
+            md: "flex",
+            sm: "flex",
+            lg: "flex",
+            xl: "flex",
           },
           justifyContent: "center",
           fontWeight: "bold",
           fontFamily: "Roboto Slab",
-          mt: 0.4,
+          mt: { xl: 0.4, lg: 0.5, md: 0 },
           marginLeft: 4,
         }}
       >
@@ -46,6 +58,8 @@ export function FilterComponent({ setFilter }) {
         sx={{
           border: 2,
           borderRadius: 6,
+          justifyContent: "center",
+          alignContent: "center",
           borderColor: "rgba(80, 2, 99, 1)",
           backgroundColor: "rgba(80, 2, 99, 0.3)",
           color: "white",
@@ -54,7 +68,7 @@ export function FilterComponent({ setFilter }) {
             lg: "0.8rem",
             md: "0.8rem",
             sm: "0.6rem",
-            xs: "0.6rem",
+            xs: "0.5rem",
           },
         }}
         onClick={() => setFilter("all")}
@@ -74,7 +88,7 @@ export function FilterComponent({ setFilter }) {
             lg: "0.8rem",
             md: "0.8rem",
             sm: "0.6rem",
-            xs: "0.6rem",
+            xs: "0.5rem",
           },
         }}
         onClick={() => setFilter("archived")}
@@ -94,13 +108,13 @@ export function FilterComponent({ setFilter }) {
             lg: "0.8rem",
             md: "0.8rem",
             sm: "0.6rem",
-            xs: "0.6rem",
+            xs: "0.5rem",
           },
           mr: 4,
         }}
         onClick={() => setFilter("unarchived")}
       >
-        Neachivované
+        Nearchivované
       </Button>
     </Box>
   );

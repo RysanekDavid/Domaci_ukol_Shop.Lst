@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -19,6 +19,11 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL,
+});
 
 const initialLists = [
   { id: 1, name: "Osobní nákupy", archived: false },
@@ -34,6 +39,17 @@ export default function ShoppingListsOverview() {
   const [openDialog, setOpenDialog] = useState(false);
   const [deletingListId, setDeletingListId] = useState(null);
   const [userRole, setUserRole] = useState("owner");
+
+  useEffect(() => {
+    api
+      .get("/shoppingLists")
+      .then((response) => {
+        // zpracování odpovědi
+      })
+      .catch((error) => {
+        // ošetření chyby
+      });
+  }, []);
 
   const handleDelete = (id) => {
     setLists(lists.filter((list) => list.id !== id));

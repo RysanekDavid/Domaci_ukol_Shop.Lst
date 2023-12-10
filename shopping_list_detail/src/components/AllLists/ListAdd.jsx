@@ -4,21 +4,27 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { nanoid } from "nanoid";
+import axios from "axios";
 
 export function AddListForm({ onAddList }) {
   const [newListName, setNewListName] = useState("");
 
   const handleAddList = () => {
     const newList = {
-      id: nanoid(10),
       name: newListName,
-      archived: false,
-      userId: nanoid(6), //todo bude se přebírat z backendu
-      role: "owner",
-      members: [],
+      userId: nanoid(4),
     };
-    onAddList(newList);
-    setNewListName("");
+
+    // Odesíláme požadavek na server
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/shoppingLists`, newList)
+      .then((response) => {
+        onAddList(response.data);
+        setNewListName("");
+      })
+      .catch((error) => {
+        console.error("Error adding new list:", error);
+      });
   };
 
   return (

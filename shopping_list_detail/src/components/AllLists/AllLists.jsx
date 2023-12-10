@@ -44,10 +44,11 @@ export default function ShoppingListsOverview() {
     api
       .get("/shoppingLists")
       .then((response) => {
-        // zpracování odpovědi
+        console.log("Data received:", response.data);
+        setLists(response.data);
       })
       .catch((error) => {
-        // ošetření chyby
+        console.error("There was an error fetching the lists:", error);
       });
   }, []);
 

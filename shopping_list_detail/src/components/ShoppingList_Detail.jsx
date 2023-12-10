@@ -1,4 +1,3 @@
-import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -9,11 +8,13 @@ import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 export default function ListDetailComponent() {
   const location = useLocation();
@@ -31,33 +32,91 @@ export default function ListDetailComponent() {
   const [filter, setFilter] = useState("all");
   const navigate = useNavigate();
 
+  const { listId } = useParams();
+  //endpoint /shoppingLists/:listId.
+
+  const fetchListDetails = async (listId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}`
+      );
+      setItems(response.data.items);
+      setListName(response.data.name);
+      setMembers(response.data.members);
+    } catch (error) {
+      console.error("Error fetching list details:", error);
+    }
+  };
+  useEffect(() => {
+    fetchListDetails(listId);
+  }, [listId]);
+
   // Funkce pro přidání položky
-  const handleAddItem = () => {
+  const handleAddItem = async () => {
     if (inputValue) {
-      setItems([...items, { name: inputValue, inBasket: false }]);
-      setInputValue("");
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}/items`,
+          {
+            name: inputValue,
+            quantity: 1, // Výchozí hdonota
+          }
+        );
+        setItems(response.data.items);
+        setInputValue("");
+      } catch (error) {
+        console.error("Error adding item:", error);
+      }
+    }
+  };
+
+  // Funkce pro smazání položky
+  const handleDeleteItem = async (itemId) => {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}/items/${itemId}`
+      );
+      setItems((prevItems) => prevItems.filter((item) => item._id !== itemId));
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
+  // API pro Editaci Názvu Seznamu
+
+  const updateListName = async () => {
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}`,
+        {
+          newName: listName,
+        }
+      );
+      setListName(response.data.name);
+    } catch (error) {
+      console.error("Error updating list name:", error);
     }
   };
 
   const navigateToHome = () => {
     navigate("/"); // přesměruje na domovskou stránku
   };
-  // Funkce pro smazání položky
-  const handleDeleteItem = (index) => {
-    const newItems = items.filter((_, i) => i !== index);
-    setItems(newItems);
-  };
 
   // Funkce pro změnu stavu položky
-  const handleToggleInBasket = (index) => {
-    setItems(
-      items.map((item, i) => {
-        if (i === index) {
-          return { ...item, inBasket: !item.inBasket };
-        }
-        return item;
-      })
-    );
+  const handleToggleInBasket = async (item) => {
+    try {
+      const updatedItem = { ...item, inBasket: !item.inBasket };
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}/items/${item._id}`,
+        updatedItem
+      );
+
+      setItems((prevItems) =>
+        prevItems.map((i) => (i._id === item._id ? response.data : i))
+      );
+    } catch (error) {
+      console.error("Error updating item status:", error);
+    }
   };
 
   // Funkce pro editaci
@@ -311,6 +370,7 @@ export default function ListDetailComponent() {
             onBlur={(event) => {
               setIsEditing(false);
               checkEmptyName(event);
+              updateListName();
             }}
             autoFocus
             size="small"
@@ -471,10 +531,8 @@ export default function ListDetailComponent() {
             <IconButton
               edge="start"
               aria-label="mark-as-done"
-              onClick={() => handleToggleInBasket(index)}
-              sx={{
-                mr: 2,
-              }}
+              onClick={() => handleToggleInBasket(item)}
+              sx={{ mr: 2 }}
             >
               <CheckIcon
                 sx={{
@@ -495,7 +553,7 @@ export default function ListDetailComponent() {
             <IconButton
               edge="end"
               aria-label="delete"
-              onClick={() => handleDeleteItem(index)}
+              onClick={() => handleDeleteItem(item._id)}
               sx={{ color: "#e00914", marginLeft: "auto", marginRight: 1 }}
             >
               <DeleteForeverIcon />

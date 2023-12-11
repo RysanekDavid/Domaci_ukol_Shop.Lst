@@ -7,10 +7,11 @@ import HomePage from "./components/ShoppingList_Detail.jsx";
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/detail/:id" element={<HomePage />} />
-        <Route path="/" element={<ShoppingListsOverview />} />
-      </Routes>
+<Routes>
+  <Route path="/detail/:listId" element={<HomePage />} />
+  <Route path="/" element={<ShoppingListsOverview />} />
+</Routes>
+
     </Router>
   );
 }

@@ -33,13 +33,18 @@ export default function ListDetailComponent() {
   const navigate = useNavigate();
 
   const { listId } = useParams();
+
+
   //endpoint /shoppingLists/:listId.
 
   const fetchListDetails = async (listId) => {
+    if (!listId) {
+      console.error("Chyba: Neplatné listId.");
+      return;
+    }
+    
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}`
-      );
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/shoppingLists/${listId}`);
       setItems(response.data.items);
       setListName(response.data.name);
       setMembers(response.data.members);
@@ -47,10 +52,16 @@ export default function ListDetailComponent() {
       console.error("Error fetching list details:", error);
     }
   };
+  
   useEffect(() => {
-    fetchListDetails(listId);
+    if (listId) {
+      fetchListDetails(listId);
+    } else {
+      console.log("listId je undefined");
+    }
   }, [listId]);
-
+  
+  
   // Funkce pro přidání položky
   const handleAddItem = async () => {
     if (inputValue) {

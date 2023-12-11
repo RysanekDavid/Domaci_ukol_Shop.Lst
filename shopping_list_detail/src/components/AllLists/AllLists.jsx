@@ -79,8 +79,12 @@ export default function ShoppingListsOverview() {
   };
 
   const handleOpenList = (id, listName) => {
-    navigate(`/detail/${id}`, { state: { listName: listName } });
+    
+    navigate(`/detail/${id}`, { state: { listName } });
   };
+  
+ 
+  
 
   const filteredLists = lists.filter((list) => {
     if (filter === "archived") return list.archived;
@@ -119,7 +123,7 @@ export default function ShoppingListsOverview() {
             sx={{
               minWidth: 240,
 
-              backgroundColor: "rgba(80, 2, 99, 0.05)",
+              
               border: 4,
               borderColor: "rgba(80, 2, 99, 1)",
               backgroundColor: "rgba(0, 0, 0, 0.95)",

@@ -20,20 +20,16 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
+import { mockListData } from "../mockData";
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 });
 
-const initialLists = [
-  { id: 1, name: "Osobní nákupy", archived: false },
-  { id: 2, name: "Práce", archived: false },
-  { id: 3, name: "Večírek" },
-  { id: 4, name: "TEST - Archiv", archived: true },
-];
-
 export default function ShoppingListsOverview() {
-  const [lists, setLists] = useState(initialLists);
+  const [lists, setLists] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all");
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
@@ -78,13 +74,9 @@ export default function ShoppingListsOverview() {
     setLists([...lists, newList]);
   };
 
-  const handleOpenList = (id, listName) => {
-    
-    navigate(`/detail/${id}`, { state: { listName } });
+  const handleOpenList = (listId, listName) => {
+    navigate(`/detail/${listId}`, { state: { listName } });
   };
-  
- 
-  
 
   const filteredLists = lists.filter((list) => {
     if (filter === "archived") return list.archived;
@@ -123,7 +115,6 @@ export default function ShoppingListsOverview() {
             sx={{
               minWidth: 240,
 
-              
               border: 4,
               borderColor: "rgba(80, 2, 99, 1)",
               backgroundColor: "rgba(0, 0, 0, 0.95)",

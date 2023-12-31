@@ -4,19 +4,20 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import IconButton from "@mui/material/IconButton";
-import CheckIcon from "@mui/icons-material/Check";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import EditIcon from "@mui/icons-material/Edit";
 import React, { useState, useEffect } from "react";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-
+import { mockListData } from "../mockData";
+import AddItemForm from "./AddItemForm";
+import ListControls from "./ListControls";
+import ListItemControls from "./ListItemControls";
+import ListMembers from "./ListMembers";
+import EditListName from "./EditListName";
+import ListFilters from "./ListFilters";
 export default function ListDetailComponent() {
+  const { listId } = useParams();
   const location = useLocation();
   const [items, setItems] = React.useState([]);
   const [inputValue, setInputValue] = React.useState("");
@@ -32,19 +33,19 @@ export default function ListDetailComponent() {
   const [filter, setFilter] = useState("all");
   const navigate = useNavigate();
 
-  const { listId } = useParams();
-
-
   //endpoint /shoppingLists/:listId.
 
   const fetchListDetails = async (listId) => {
+    console.log("Fetching details for listId:", listId);
     if (!listId) {
       console.error("Chyba: Neplatné listId.");
       return;
     }
-    
+
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/shoppingLists/${listId}`);
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}`
+      );
       setItems(response.data.items);
       setListName(response.data.name);
       setMembers(response.data.members);
@@ -52,16 +53,23 @@ export default function ListDetailComponent() {
       console.error("Error fetching list details:", error);
     }
   };
-  
+
   useEffect(() => {
     if (listId) {
-      fetchListDetails(listId);
+      const listDetail = mockListData.find(
+        (list) => list.id === parseInt(listId)
+      );
+      if (listDetail) {
+        setItems(listDetail.items);
+        setListName(listDetail.name);
+        setMembers(listDetail.members);
+      } else {
+        console.error("Seznam nebyl nalezen.");
+      }
     } else {
-      console.log("listId je undefined");
+      console.error("listId undefined, detail seznamu nelze načíst");
     }
   }, [listId]);
-  
-  
   // Funkce pro přidání položky
   const handleAddItem = async () => {
     if (inputValue) {
@@ -222,62 +230,12 @@ export default function ListDetailComponent() {
           zIndex: 1,
         }}
       >
-        {!isOwner && isMember && (
-          <Button
-            onClick={handleLeaveList}
-            sx={{
-              color: "rgba(80, 2, 99, 1)",
-              border: 2,
-              borderColor: "#e00914",
-              backgroundColor: "rgba(255, 0, 0, 0.75)",
-              position: "absolute",
-
-              top: "58vh",
-              right: "4vw",
-              "&:hover": {
-                backgroundColor: "#c00712",
-              },
-              textTransform: "none",
-              fontSize: "1.1rem",
-              borderRadius: 4,
-              minWidth: "auto",
-            }}
-          >
-            Odejít ze seznamu
-          </Button>
-        )}
-
-        {!isMember && (
-          <p>
-            <h2>Opustili jste seznam.</h2>
-          </p>
-        )}
-
-        <Tooltip title="Všechny Seznamy">
-          <IconButton
-            onClick={navigateToHome}
-            sx={{
-              ml: 1,
-              mr: 1,
-              mb: 1,
-              border: 2,
-              borderColor: "rgba(80, 2, 99, 1)",
-              borderRadius: 5,
-              padding: 1,
-
-              backgroundColor: "rgba(80, 2, 99, 0.2)",
-              fontSize: {
-                xl: "2rem",
-                lg: "2rem",
-                md: "2rem",
-                sm: "1.5rem",
-                xs: "1.2rem",
-              },
-            }}
-          >
-            <ListAltIcon sx={{ color: "rgba(80, 2, 99, 1)" }} />
-          </IconButton>
-        </Tooltip>
+        <ListControls
+          isOwner={isOwner}
+          isMember={isMember}
+          handleLeaveList={handleLeaveList}
+          navigateToHome={navigateToHome}
+        />
         <Box
           sx={{
             position: "absolute",
@@ -374,68 +332,14 @@ export default function ListDetailComponent() {
             Nedokončeno
           </Button>
         </Box>
-        {isEditing ? (
-          <TextField
-            value={listName}
-            onChange={handleListNameChange}
-            onBlur={(event) => {
-              setIsEditing(false);
-              checkEmptyName(event);
-              updateListName();
-            }}
-            autoFocus
-            size="small"
-            sx={{}}
-          />
-        ) : (
-          <Typography
-            variant="h4"
-            component="h1"
-            gutterBottom
-            sx={{
-              fontSize: {
-                xl: "1.8rem",
-                lg: "1.6rem",
-                md: "1.6rem",
-                sm: "1.5rem",
-                xs: "4.6vw",
-              },
-              fontFamily: "Roboto Slab",
-              fontWeight: "bold",
-              color: "rgba(80, 2, 99, 1)",
-              border: 2,
-              borderColor: "rgba(80, 2, 99, 1)",
-              borderRadius: 6,
-              padding: 1,
-              backgroundColor: "rgba(80, 2, 99, 0.1)",
-            }}
-          >
-            {listName}
-          </Typography>
-        )}
-        {isOwner && (
-          <IconButton
-            onClick={handleEditListName}
-            sx={{
-              ml: 1,
-              mb: 1,
-              mr: 1,
-              border: 2,
-              borderColor: "rgba(80, 2, 99, 1)",
-              borderRadius: 5,
-              backgroundColor: "rgba(80, 2, 99, 0.2)",
-              fontSize: {
-                xl: "2rem",
-                lg: "2rem",
-                md: "2rem",
-                sm: "1.5rem",
-                xs: "1.2rem",
-              },
-            }}
-          >
-            <EditIcon sx={{ color: "rgba(80, 2, 99, 1)" }} />
-          </IconButton>
-        )}
+        <EditListName
+          isEditing={isEditing}
+          setIsEditing={setIsEditing}
+          listName={listName}
+          setListName={setListName}
+          updateListName={updateListName}
+          isOwner={isOwner}
+        />
       </Box>
       <Button
         variant="contained"
@@ -539,36 +443,11 @@ export default function ListDetailComponent() {
               display: "flex",
             }}
           >
-            <IconButton
-              edge="start"
-              aria-label="mark-as-done"
-              onClick={() => handleToggleInBasket(item)}
-              sx={{ mr: 2 }}
-            >
-              <CheckIcon
-                sx={{
-                  fontSize: "1.5rem",
-                  border: item.inBasket ? 3 : 2,
-                  borderColor: "rgba(80, 2, 99, 1)",
-                  borderRadius: 2,
-                  backgroundColor: item.inBasket
-                    ? "rgba(80, 2, 99, 0.3)"
-                    : "transparent",
-                }}
-                color={item.inBasket ? "primary" : "inherit"}
-              />
-            </IconButton>
-
-            {item.name}
-
-            <IconButton
-              edge="end"
-              aria-label="delete"
-              onClick={() => handleDeleteItem(item._id)}
-              sx={{ color: "#e00914", marginLeft: "auto", marginRight: 1 }}
-            >
-              <DeleteForeverIcon />
-            </IconButton>
+            <ListItemControls
+              item={item}
+              handleToggleInBasket={handleToggleInBasket}
+              handleDeleteItem={handleDeleteItem}
+            />
           </ListItem>
         ))}
       </List>
@@ -677,152 +556,16 @@ export default function ListDetailComponent() {
       >
         Seznam členů:
       </Typography>
-      <List
-        sx={{
-          width: "90%",
-          border: 4,
-          borderColor: "rgba(80, 2, 99, 1)",
-          borderRadius: 5,
-          p: 1,
-          maxHeight: {
-            xl: "15vh",
-            lg: "15vh",
-            md: "15vh",
-            sm: "12vh",
-            xs: "12.6vh",
-          },
-          minHeight: {
-            xl: "15vh",
-            lg: "15vh",
-            md: "15vh",
-            sm: "10vh",
-            xs: "12vh",
-          },
-          position: "absolute",
-          bottom: 70,
-          overflow: "auto",
-          fontFamily: "Edu TAS Beginner",
-          fontSize: {
-            xl: "1.6rem",
-            lg: "2rem",
-            md: "2rem",
-            sm: "1.5rem",
-            xs: "1.24rem",
-          },
-        }}
-      >
-        {members.map((member, index) => (
-          <ListItem
-            sx={{
-              borderBottom: 2,
-              mb: 0.5,
-              borderRadius: 0,
-              borderColor: "rgba(80, 2, 99, 0.5)",
-              zIndex: 1,
-            }}
-            key={index}
-          >
-            {member}
-
-            {isOwner && (
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() => handleDeleteMember(index)}
-                sx={{ right: 40, color: "#e00914", position: "absolute" }}
-              >
-                <DeleteForeverIcon />
-              </IconButton>
-            )}
-          </ListItem>
-        ))}
-      </List>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-between",
-          maxWidth: "100%",
-          position: "absolute",
-          bottom: 70,
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            position: "absolute",
-            bottom: {
-              xl: "22vh",
-              lg: "26vh",
-              md: "26vh",
-              sm: "21vh",
-              xs: "24vh",
-            },
-          }}
-        >
-          <TextField
-            label="Přidat položku"
-            value={inputValue}
-            variant="outlined"
-            size="small"
-            sx={{
-              ml: 2,
-              mr: 1,
-
-              minWidth: {
-                xs: "44vw",
-                sm: "10rem",
-                md: "10rem",
-                lg: "15rem",
-                xl: "20rem",
-              },
-              "& .MuiOutlinedInput-root": {
-                color: "rgba(80, 2, 99,0.8)", // Barva textu
-                "& fieldset": {
-                  borderColor: "rgba(80, 2, 99, 0.8)",
-                  border: 2,
-                  borderRadius: 4, // Barva okraje
-                },
-                "&:hover fieldset": {
-                  borderColor: "rgba(80, 2, 99, 1)", // Barva okraje při najetí myší
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "rgba(80, 2, 99, 1)", // Barva okraje při zaměření
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: "rgba(80, 2, 99,0.8)", // Barva popisku
-              },
-            }}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleAddItem}
-            size="medium"
-            sx={{
-              minWidth: "4rem",
-              mr: 1,
-              border: 2,
-              color: "white",
-              fontWeight: "bold",
-              borderColor: "rgba(80, 2, 99, 0.8)",
-              borderRadius: 4,
-              backgroundColor: "rgba(80, 2, 99, 0.5)",
-              "&:hover": {
-                backgroundColor: "rgba(80, 2, 99, 0.6)",
-                border: 2,
-                borderColor: "rgba(80, 2, 99, 0.6)",
-                color: "rgba(80, 2, 99,1)",
-              },
-            }}
-          >
-            Přidat
-          </Button>
-        </Box>
-      </Box>
+      <ListMembers
+        members={members}
+        isOwner={isOwner}
+        handleDeleteMember={handleDeleteMember}
+      />
+      <AddItemForm
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        handleAddItem={handleAddItem}
+      />
     </Box>
   );
 }

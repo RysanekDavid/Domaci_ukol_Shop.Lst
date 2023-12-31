@@ -2,15 +2,21 @@ import React from "react";
 import { TextField, Typography, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
+import { useState } from "react";
+import axios from "axios";
 const EditListName = ({
   isEditing,
   setIsEditing,
   listName,
   setListName,
-  updateListName,
   isOwner,
+  listId,
 }) => {
+  const [originalListName, setOriginalListName] = useState(listName);
   const handleEditListName = () => {
+    if (!isEditing) {
+      setOriginalListName(listName);
+    }
     setIsEditing(!isEditing);
   };
 
@@ -18,12 +24,23 @@ const EditListName = ({
     setListName(e.target.value);
   };
 
-  const checkEmptyName = (event) => {
-    const newName = event.target.value.trim();
-    setListName(newName || listName);
-    setIsEditing(false);
-    if (newName) {
-      updateListName();
+  function checkEmptyName(event) {
+    const newName = event.target.value;
+    if (newName.trim() === "") {
+      setListName(originalListName);
+    } else {
+      setListName(newName);
+    }
+  }
+  const updateListName = async (newName) => {
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}`,
+        { newName }
+      );
+      setListName(response.data.name);
+    } catch (error) {
+      console.error("Error updating list name:", error);
     }
   };
 

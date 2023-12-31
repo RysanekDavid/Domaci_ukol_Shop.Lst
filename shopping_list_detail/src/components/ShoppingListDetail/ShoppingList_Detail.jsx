@@ -1,7 +1,5 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import React, { useState, useEffect } from "react";
@@ -15,7 +13,11 @@ import ListControls from "./ListControls";
 import ListItemControls from "./ListItemControls";
 import ListMembers from "./ListMembers";
 import EditListName from "./EditListName";
-import ListFilters from "./ListFilters";
+import MemberAddForm from "./MemberAddForm";
+import ToggleRole from "./RoleToggleButton";
+import ListFilterControls from "./ListFilterControls";
+import ThemeSwitcher from "../DarkMode/ThemeSwitcher";
+
 export default function ListDetailComponent() {
   const { listId } = useParams();
   const location = useLocation();
@@ -25,7 +27,6 @@ export default function ListDetailComponent() {
     location.state?.listName || "Název Seznamu"
   );
   const [isEditing, setIsEditing] = useState(false);
-  const [originalListName, setOriginalListName] = useState(listName);
   const [isOwner, setIsOwner] = useState(true);
   const [members, setMembers] = useState([]);
   const [newMemberName, setNewMemberName] = useState("");
@@ -70,52 +71,6 @@ export default function ListDetailComponent() {
       console.error("listId undefined, detail seznamu nelze načíst");
     }
   }, [listId]);
-  // Funkce pro přidání položky
-  const handleAddItem = async () => {
-    if (inputValue) {
-      try {
-        const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}/items`,
-          {
-            name: inputValue,
-            quantity: 1, // Výchozí hdonota
-          }
-        );
-        setItems(response.data.items);
-        setInputValue("");
-      } catch (error) {
-        console.error("Error adding item:", error);
-      }
-    }
-  };
-
-  // Funkce pro smazání položky
-  const handleDeleteItem = async (itemId) => {
-    try {
-      await axios.delete(
-        `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}/items/${itemId}`
-      );
-      setItems((prevItems) => prevItems.filter((item) => item._id !== itemId));
-    } catch (error) {
-      console.error("Error deleting item:", error);
-    }
-  };
-
-  // API pro Editaci Názvu Seznamu
-
-  const updateListName = async () => {
-    try {
-      const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}`,
-        {
-          newName: listName,
-        }
-      );
-      setListName(response.data.name);
-    } catch (error) {
-      console.error("Error updating list name:", error);
-    }
-  };
 
   const navigateToHome = () => {
     navigate("/"); // přesměruje na domovskou stránku
@@ -138,28 +93,6 @@ export default function ListDetailComponent() {
     }
   };
 
-  // Funkce pro editaci
-  const handleEditListName = () => {
-    if (!isEditing) {
-      setOriginalListName(listName);
-    }
-    setIsEditing(!isEditing);
-  };
-  const handleListNameChange = (e) => {
-    setListName(e.target.value);
-  };
-
-  // Funkce pro zrušení editace
-  function checkEmptyName(event) {
-    const newName = event.target.value;
-    if (newName.trim() === "") {
-      setListName(originalListName);
-    } else {
-      setListName(newName);
-    }
-  }
-
-  // Funkce pro změnu Vlastníka / Člena
   const toggleRole = () => {
     setIsOwner(!isOwner);
   };
@@ -230,171 +163,24 @@ export default function ListDetailComponent() {
           zIndex: 1,
         }}
       >
+        <ThemeSwitcher />
         <ListControls
           isOwner={isOwner}
           isMember={isMember}
           handleLeaveList={handleLeaveList}
           navigateToHome={navigateToHome}
         />
-        <Box
-          sx={{
-            position: "absolute",
-            top: { xl: 12, lg: 28, md: 28, sm: 70, xs: 55 },
-            right: { xl: "4vw", lg: "2vw", md: "4vw", sm: "4vw", xs: "1vw" },
-            whiteSpace: "nowrap",
-          }}
-        >
-          <Typography
-            sx={{
-              color: "rgba(80, 2, 99, 1)",
-              fontSize: {
-                xl: "1.5rem",
-                lg: "1.2rem",
-                md: "1.4rem",
-                sm: "1.5rem",
-                xs: "1.2rem",
-              },
-              fontWeight: "bold",
-              marginBottom: 1,
-              marginLeft: { xl: 0, lg: 11, md: 4 },
-
-              paddingLeft: { xl: 0, lg: 1, md: 4 },
-              display: {
-                xl: "flex",
-                lg: "flex",
-                md: "flex",
-                sm: "none",
-                xs: "none",
-              },
-            }}
-          >
-            {" "}
-            Filtrovat:{" "}
-          </Typography>
-          <Button
-            sx={{
-              border: 2,
-              borderRadius: 6,
-              borderColor: "rgba(80, 2, 99, 1)",
-              backgroundColor: "rgba(80, 2, 99, 0.3)",
-              color: "rgba(80, 2, 99, 1)",
-              fontSize: {
-                xl: "1.1rem",
-                lg: "0.8rem",
-                md: "0.6rem",
-                sm: "0.6rem",
-                xs: "0.6rem",
-              },
-              mr: 1,
-            }}
-            onClick={() => setFilter("all")}
-          >
-            Vše
-          </Button>
-          <Button
-            sx={{
-              border: 2,
-              borderRadius: 6,
-              borderColor: "rgba(80, 2, 99, 1)",
-              backgroundColor: "rgba(80, 2, 99, 0.3)",
-              color: "rgba(80, 2, 99, 1)",
-              fontSize: {
-                xl: "1.1rem",
-                lg: "0.8rem",
-                md: "0.6rem",
-                sm: "0.6rem",
-                xs: "0.6rem",
-              },
-              mr: 1,
-            }}
-            onClick={() => setFilter("done")}
-          >
-            Hotovo
-          </Button>
-          <Button
-            sx={{
-              border: 2,
-              borderRadius: 6,
-              borderColor: "rgba(80, 2, 99, 1)",
-              backgroundColor: "rgba(80, 2, 99, 0.3)",
-              color: "rgba(80, 2, 99, 1)",
-              fontSize: {
-                xl: "1.1rem",
-                lg: "0.8rem",
-                md: "0.6rem",
-                sm: "0.6rem",
-                xs: "0.6rem",
-              },
-              mr: 1,
-            }}
-            onClick={() => setFilter("undone")}
-          >
-            Nedokončeno
-          </Button>
-        </Box>
+        <ListFilterControls setFilter={setFilter} />
         <EditListName
           isEditing={isEditing}
           setIsEditing={setIsEditing}
           listName={listName}
           setListName={setListName}
-          updateListName={updateListName}
           isOwner={isOwner}
+          listId={listId} // Předání listId do komponenty
         />
       </Box>
-      <Button
-        variant="contained"
-        onClick={toggleRole}
-        sx={{
-          fontSize: {
-            xs: "0.6rem",
-          },
-          position: "absolute",
-          top: 0,
-          left: { xs: "65%", md: "55%", lg: "55%", xl: "55%" },
-        }}
-      >
-        {isOwner ? "Změna" : "Změna"}
-      </Button>
-      {isOwner ? (
-        <Typography
-          sx={{
-            fontSize: "1rem",
-            position: "absolute",
-            top: 2,
-            fontWeight: "bold",
-          }}
-        >
-          Vlastník
-        </Typography>
-      ) : (
-        <Typography
-          sx={{
-            fontSize: "1rem",
-            position: "absolute",
-            top: 2,
-            fontWeight: "bold",
-          }}
-        >
-          Člen
-        </Typography>
-      )}
-      <Typography
-        sx={{
-          fontSize: {
-            xl: "1.6rem",
-            lg: "1.5rem",
-            md: "1.5rem",
-            sm: "1.4rem",
-            xs: "1.1rem",
-          },
-          position: "absolute",
-          top: { xl: 100, lg: 100, md: 90, sm: 110, xs: 125 },
-          left: { xl: 66, lg: 24, md: 24, sm: 24, xs: 24 },
-          fontWeight: "bold",
-        }}
-      >
-        Koupit:
-      </Typography>
+      <ToggleRole isOwner={isOwner} toggleRole={toggleRole} />
       <List
         sx={{
           width: "90%",
@@ -446,73 +232,18 @@ export default function ListDetailComponent() {
             <ListItemControls
               item={item}
               handleToggleInBasket={handleToggleInBasket}
-              handleDeleteItem={handleDeleteItem}
+              listId={listId}
+              setItems={setItems}
             />
           </ListItem>
         ))}
       </List>
       {isOwner && (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            position: "absolute",
-            bottom: 12,
-            zIndex: 2,
-          }}
-        >
-          <TextField
-            label="Jméno člena"
-            value={newMemberName}
-            onChange={(e) => setNewMemberName(e.target.value)}
-            size="small"
-            sx={{
-              ml: 1,
-              mr: 1,
-              minWidth: "5rem",
-              "& .MuiOutlinedInput-root": {
-                color: "rgba(80, 2, 99,0.8)", // Barva textu
-                "& fieldset": {
-                  borderColor: "rgba(80, 2, 99, 0.8)",
-                  border: 2,
-                  borderRadius: 4, // Barva okraje
-                },
-                "&:hover fieldset": {
-                  borderColor: "rgba(80, 2, 99, 1)", // Barva okraje při najetí myší
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "rgba(80, 2, 99, 1)", // Barva okraje při zaměření
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: "rgba(80, 2, 99,0.8)", // Barva popisku
-              },
-            }}
-          />
-          <Button
-            onClick={handleAddMember}
-            size="medium"
-            sx={{
-              minWidth: "4rem",
-              mr: 1,
-
-              border: 2,
-              color: "white",
-              fontWeight: "bold",
-              borderColor: "rgba(80, 2, 99, 0.8)",
-              borderRadius: 4,
-              backgroundColor: "rgba(80, 2, 99, 0.5)",
-              "&:hover": {
-                backgroundColor: "rgba(80, 2, 99, 0.6)",
-                border: 2,
-                borderColor: "rgba(80, 2, 99, 0.6)",
-                color: "rgba(80, 2, 99,1)",
-              },
-            }}
-          >
-            Přidat
-          </Button>
-        </Box>
+        <MemberAddForm
+          newMemberName={newMemberName}
+          setNewMemberName={setNewMemberName}
+          handleAddMember={handleAddMember}
+        />
       )}
 
       <Typography
@@ -564,7 +295,8 @@ export default function ListDetailComponent() {
       <AddItemForm
         inputValue={inputValue}
         setInputValue={setInputValue}
-        handleAddItem={handleAddItem}
+        listId={listId}
+        setItems={setItems}
       />
     </Box>
   );

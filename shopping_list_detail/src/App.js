@@ -6,28 +6,24 @@ import {
   createTheme,
 } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider, ThemeContext } from "./components/DarkMode";
+import { ThemeProvider, ThemeContext } from "./components/DarkMode/DarkMode.js";
 import ShoppingListsOverview from "./components/AllLists/AllLists.jsx";
 import HomePage from "./components/ShoppingListDetail/ShoppingList_Detail.jsx";
 
 function App() {
-  const { theme } = useContext(ThemeContext); // Použijte ThemeContext pro získání aktuálního tématu
+  const { theme } = useContext(ThemeContext);
 
   // Vytvoření tématu na základě aktuálního stavu
   const muiTheme = createTheme({
     palette: {
-      mode: theme, // Nastavte režim podle aktuálního tématu
+      mode: theme,
     },
   });
 
   return (
     <ThemeProvider>
-      {" "}
-      {/* Váš ThemeProvider */}
       <MuiThemeProvider theme={muiTheme}>
-        {" "}
-        {/* MUI ThemeProvider s vytvořeným tématem */}
-        <CssBaseline /> {/* Normalizuje styly a aplikuje barvu pozadí tématu */}
+        <CssBaseline />
         <Router>
           <Routes>
             <Route path="/detail/:listId" element={<HomePage />} />

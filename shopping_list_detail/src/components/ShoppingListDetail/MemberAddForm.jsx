@@ -1,65 +1,30 @@
-// AddItemForm.jsx
 import React from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import axios from "axios";
+import { Box, TextField, Button } from "@mui/material";
 
-export default function AddItemForm({
-  inputValue,
-  setInputValue,
-  listId,
-  setItems,
-}) {
-  const addItem = async () => {
-    // Přejmenováno na addItem
-    if (inputValue) {
-      try {
-        const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}/items`,
-          {
-            name: inputValue,
-            quantity: 1, // Výchozí hdonota
-          }
-        );
-        setItems(response.data.items); // Aktualizace stavu - ujistěte se, že setItems je předáno jako prop
-        setInputValue("");
-      } catch (error) {
-        console.error("Error adding item:", error);
-      }
-    }
-  };
-
+const MemberAddForm = ({
+  newMemberName,
+  setNewMemberName,
+  handleAddMember,
+}) => {
   return (
     <Box
       sx={{
         display: "flex",
+        alignItems: "center",
         position: "absolute",
-        bottom: {
-          xl: "22vh",
-          lg: "26vh",
-          md: "26vh",
-          sm: "21vh",
-          xs: "24vh",
-        },
+        bottom: 12,
+        zIndex: 2,
       }}
     >
       <TextField
-        label="Přidat položku"
-        value={inputValue}
-        variant="outlined"
+        label="Jméno člena"
+        value={newMemberName}
+        onChange={(e) => setNewMemberName(e.target.value)}
         size="small"
         sx={{
-          ml: 2,
+          ml: 1,
           mr: 1,
-
-          minWidth: {
-            xs: "44vw",
-            sm: "10rem",
-            md: "10rem",
-            lg: "15rem",
-            xl: "20rem",
-          },
+          minWidth: "5rem",
           "& .MuiOutlinedInput-root": {
             color: "rgba(80, 2, 99,0.8)", // Barva textu
             "& fieldset": {
@@ -78,16 +43,14 @@ export default function AddItemForm({
             color: "rgba(80, 2, 99,0.8)", // Barva popisku
           },
         }}
-        onChange={(e) => setInputValue(e.target.value)}
       />
       <Button
-        variant="outlined"
-        color="primary"
-        onClick={addItem}
+        onClick={handleAddMember}
         size="medium"
         sx={{
           minWidth: "4rem",
           mr: 1,
+
           border: 2,
           color: "white",
           fontWeight: "bold",
@@ -106,4 +69,6 @@ export default function AddItemForm({
       </Button>
     </Box>
   );
-}
+};
+
+export default MemberAddForm;

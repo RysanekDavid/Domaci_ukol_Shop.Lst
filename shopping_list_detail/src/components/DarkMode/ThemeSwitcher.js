@@ -1,4 +1,3 @@
-// ThemeSwitcher.js
 import React, { useContext } from "react";
 import { ThemeContext } from "./DarkMode";
 import Switch from "@mui/material/Switch";

@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { ThemeProvider } from "./components/DarkMode";
+import { ThemeProvider } from "./components/DarkMode/DarkMode";
 
 ReactDOM.render(
   <React.StrictMode>

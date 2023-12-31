@@ -3,12 +3,24 @@ import React from "react";
 import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import axios from "axios";
 
 export default function ListItemControls({
   item,
   handleToggleInBasket,
-  handleDeleteItem,
+  listId,
+  setItems,
 }) {
+  const deleteItem = async (itemId) => {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}/items/${itemId}`
+      );
+      setItems((prevItems) => prevItems.filter((item) => item._id !== itemId));
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
   return (
     <div>
       <IconButton
@@ -36,7 +48,7 @@ export default function ListItemControls({
       <IconButton
         edge="end"
         aria-label="delete"
-        onClick={() => handleDeleteItem(item._id)}
+        onClick={() => deleteItem(item._id)}
         sx={{ color: "#e00914", marginLeft: "auto", marginRight: 1 }}
       >
         <DeleteForeverIcon />

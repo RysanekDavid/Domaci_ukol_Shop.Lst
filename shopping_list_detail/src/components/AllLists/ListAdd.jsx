@@ -3,18 +3,36 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 export function AddListForm({ onAddList }) {
   const [newListName, setNewListName] = useState("");
+  const { t } = useTranslation();
 
   const handleAddList = () => {
+    // Simulace ID, které byste normálně dostali od serveru
+    const mockId = Math.floor(Math.random() * 1000);
+
+    const newList = {
+      id: mockId,
+      name: newListName,
+      items: [], // předpokládáme, že nový seznam bude mít prázdný seznam položek
+    };
+
+    // Předáme "nový seznam" do funkce onAddList, která by ho měla zpracovat
+    onAddList(newList);
+
+    // Resetujeme input field
+    setNewListName("");
+  };
+
+  /*const handleAddList = () => {
     const newList = {
       name: newListName,
     };
-
-    // Odesíláme požadavek na server
-    axios
+*/
+  // Odesíláme požadavek na server
+  /*axios
     .post(`${process.env.REACT_APP_API_URL}/shoppingLists`, newList)
     .then((response) => {
       onAddList(response.data);
@@ -24,7 +42,7 @@ export function AddListForm({ onAddList }) {
       console.error("Error adding new list:", error);
     });
 };
-
+*/
   return (
     <Box
       component="form"
@@ -75,7 +93,7 @@ export function AddListForm({ onAddList }) {
             mt: 1,
           }}
         >
-          Vytvoření nového seznamu:
+          {t("AddNewList")}
         </Typography>
       </Box>
       <Box
@@ -88,7 +106,7 @@ export function AddListForm({ onAddList }) {
         }}
       >
         <TextField
-          label="Název seznamu"
+          label={t("ListNamePlaceholder")}
           value={newListName}
           onChange={(e) => setNewListName(e.target.value)}
           sx={{
@@ -142,7 +160,7 @@ export function AddListForm({ onAddList }) {
           onClick={handleAddList}
           disabled={!newListName}
         >
-          Přidat seznam
+          {t("AddListButton")}
         </Button>
       </Box>
     </Box>

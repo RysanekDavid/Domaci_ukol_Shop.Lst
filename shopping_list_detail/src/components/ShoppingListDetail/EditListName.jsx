@@ -76,7 +76,7 @@ const EditListName = ({
               lg: "1.6rem",
               md: "1.6rem",
               sm: "1.5rem",
-              xs: "4.6vw",
+              xs: "1.2rem",
             },
             fontFamily: "Roboto Slab",
             fontWeight: "bold",

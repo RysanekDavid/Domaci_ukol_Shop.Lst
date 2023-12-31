@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { useTranslation } from "react-i18next";
 
 export function FilterComponent({ setFilter }) {
+  const { t } = useTranslation();
   return (
     <Box
       sx={{
@@ -51,7 +53,7 @@ export function FilterComponent({ setFilter }) {
           marginLeft: 4,
         }}
       >
-        Filtrovat seznamy:
+        {t("FilterLists")}
       </Typography>
       <Button
         variant="contained"
@@ -73,7 +75,7 @@ export function FilterComponent({ setFilter }) {
         }}
         onClick={() => setFilter("all")}
       >
-        Všechny
+        {t("ListsAll")}
       </Button>
       <Button
         variant="contained"
@@ -93,7 +95,7 @@ export function FilterComponent({ setFilter }) {
         }}
         onClick={() => setFilter("archived")}
       >
-        Archivované
+        {t("ListsArchived")}
       </Button>
       <Button
         variant="contained"
@@ -114,7 +116,7 @@ export function FilterComponent({ setFilter }) {
         }}
         onClick={() => setFilter("unarchived")}
       >
-        Nearchivované
+        {t("ListsUnarchived")}
       </Button>
     </Box>
   );

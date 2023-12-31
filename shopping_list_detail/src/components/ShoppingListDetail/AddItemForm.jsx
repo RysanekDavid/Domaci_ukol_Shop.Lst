@@ -4,6 +4,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 export default function AddItemForm({
   inputValue,
@@ -11,7 +12,7 @@ export default function AddItemForm({
   listId,
   setItems,
 }) {
-  const addItem = async () => {
+  /*const addItem = async () => {
     // Přejmenováno na addItem
     if (inputValue) {
       try {
@@ -29,23 +30,32 @@ export default function AddItemForm({
       }
     }
   };
+*/
+  const { t } = useTranslation();
 
+  const addItem = () => {
+    if (inputValue) {
+      const newItem = {
+        id: Math.random(),
+        name: inputValue,
+        quantity: 1,
+        inBasket: false,
+      };
+
+      setItems((prevItems) => [...prevItems, newItem]);
+      setInputValue("");
+    }
+  };
   return (
     <Box
       sx={{
         display: "flex",
-        position: "absolute",
-        bottom: {
-          xl: "22vh",
-          lg: "26vh",
-          md: "26vh",
-          sm: "21vh",
-          xs: "24vh",
-        },
+        alignItems: "center",
+        mt: { xl: 36, lg: 30, md: 28, sm: 16, xs: 20 },
       }}
     >
       <TextField
-        label="Přidat položku"
+        label={t("AddItemPlaceholder")}
         value={inputValue}
         variant="outlined"
         size="small"
@@ -102,7 +112,7 @@ export default function AddItemForm({
           },
         }}
       >
-        Přidat
+        {t("AddItemButton")}
       </Button>
     </Box>
   );

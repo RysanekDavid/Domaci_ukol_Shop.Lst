@@ -1,7 +1,9 @@
 import React from "react";
 import { Box, Typography, Button } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const ListFilterControls = ({ setFilter }) => {
+  const { t } = useTranslation();
   return (
     <Box
       sx={{
@@ -35,8 +37,7 @@ const ListFilterControls = ({ setFilter }) => {
           },
         }}
       >
-        {" "}
-        Filtrovat:{" "}
+        {t("Filter")}
       </Typography>
       <Button
         sx={{
@@ -56,7 +57,7 @@ const ListFilterControls = ({ setFilter }) => {
         }}
         onClick={() => setFilter("all")}
       >
-        Vše
+        {t("All")}
       </Button>
       <Button
         sx={{
@@ -76,7 +77,7 @@ const ListFilterControls = ({ setFilter }) => {
         }}
         onClick={() => setFilter("done")}
       >
-        Hotovo
+        {t("Done")}
       </Button>
       <Button
         sx={{
@@ -96,7 +97,7 @@ const ListFilterControls = ({ setFilter }) => {
         }}
         onClick={() => setFilter("undone")}
       >
-        Nedokončeno
+        {t("Undone")}
       </Button>
     </Box>
   );

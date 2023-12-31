@@ -1,11 +1,14 @@
 import React from "react";
 import { Box, TextField, Button } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const MemberAddForm = ({
   newMemberName,
   setNewMemberName,
   handleAddMember,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Box
       sx={{
@@ -17,7 +20,7 @@ const MemberAddForm = ({
       }}
     >
       <TextField
-        label="Jméno člena"
+        label={t("MemberNamePlaceholder")}
         value={newMemberName}
         onChange={(e) => setNewMemberName(e.target.value)}
         size="small"
@@ -65,7 +68,7 @@ const MemberAddForm = ({
           },
         }}
       >
-        Přidat
+        {t("AddItemButton")}
       </Button>
     </Box>
   );

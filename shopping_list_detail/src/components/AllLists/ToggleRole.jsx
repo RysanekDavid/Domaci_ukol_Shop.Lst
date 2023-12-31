@@ -16,7 +16,20 @@ export function UserRoleToggle({ userRole, setUserRole }) {
         mt: 0,
       }}
     >
-      <Typography sx={{ fontSize: 16, mr: 2 }} variant="caption">
+      <Typography
+        sx={{
+          fontSize: 16,
+          mr: 2,
+          display: {
+            xl: "flex",
+            lg: "flex",
+            md: "flex",
+            sm: "flex",
+            xs: "none",
+          },
+        }}
+        variant="caption"
+      >
         Aktuální role: {userRole}
       </Typography>
       <Button

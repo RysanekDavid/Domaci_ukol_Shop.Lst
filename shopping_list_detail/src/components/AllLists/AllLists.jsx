@@ -21,6 +21,9 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
 import { mockListData } from "../mockData";
+import ThemeSwitcher from "../DarkMode/ThemeSwitcher";
+import LanguageSwitcher from "../i18n/TranslationSwitch";
+import { useTranslation } from "react-i18next";
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
@@ -35,8 +38,9 @@ export default function ShoppingListsOverview() {
   const [openDialog, setOpenDialog] = useState(false);
   const [deletingListId, setDeletingListId] = useState(null);
   const [userRole, setUserRole] = useState("owner");
+  const { t } = useTranslation();
 
-  useEffect(() => {
+  /* useEffect(() => {
     api
       .get("/shoppingLists")
       .then((response) => {
@@ -45,6 +49,21 @@ export default function ShoppingListsOverview() {
       })
       .catch((error) => {
         console.error("There was an error fetching the lists:", error);
+      });
+  }, []);
+*/
+  useEffect(() => {
+    setLoading(true);
+    api
+      .get("/shoppingLists")
+      .then((response) => {
+        setLists(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the lists:", error);
+        setLists(mockListData); // Nastaví mock data pokud API volání selže
+        setLoading(false);
       });
   }, []);
 
@@ -96,8 +115,21 @@ export default function ShoppingListsOverview() {
 
   return (
     <>
+      <ThemeSwitcher
+        sx={{ position: "absolute", top: 0, right: "8%", mt: 0.2 }}
+      />
+      <LanguageSwitcher
+        sx={{
+          display: "flex",
+          position: "absolute",
+          zIndex: 1000,
+          top: { xl: 70, lg: 70, md: 134, sm: 136, xs: 130 },
+          right: { xl: 130, lg: 100, md: 70, sm: 40, xs: 18 },
+        }}
+      />
       <UserRoleToggle userRole={userRole} setUserRole={setUserRole} />
       <FilterComponent setFilter={setFilter} />
+
       <Box
         sx={{
           display: "flex",
@@ -166,7 +198,7 @@ export default function ShoppingListsOverview() {
                   },
                 }}
               >
-                Otevřít Seznam
+                {t("OpenList")}
               </Button>
             </CardContent>
             <CardActions>

@@ -1,0 +1,23 @@
+{
+  "InCart": "Koupit:",
+  "Members": "Seznam členů:",
+  "Filter": "Filtrovat:",
+  "AddItemPlaceholder": "Přidat položku",
+  "AddItemButton": "Přidat",
+  "MemberNamePlaceholder": "Jméno člena",
+  "Owner": "Vlastník:",
+  "All": "VŠE",
+  "Done": "HOTOVO",
+  "Undone": "NEDOKONČENO",
+  "DMCaptionLong": "Režim zobrazení",
+  "DMCaptionShort": "Režim",
+
+  "FilterLists": "Filtrovat seznamy:",
+  "ListsAll": "VŠECHNY",
+  "ListsArchived": "ARCHIVOVANÉ",
+  "ListsUnarchived": "NEARCHIVOVANÉ",
+  "OpenList": "OTEVŘÍT SEZNAM",
+  "AddNewList": "Vytvoření nového seznamu:",
+  "ListNamePlaceholder": "Název seznamu",
+  "AddListButton": "PŘIDAT SEZNAM"
+}

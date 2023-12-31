@@ -1,0 +1,23 @@
+{
+  "InCart": "To Buy:",
+  "Members": "List of members:",
+  "Filter": "Filter:",
+  "AddItemPlaceholder": "Add item",
+  "AddItemButton": "Add",
+  "MemberNamePlaceholder": "Member name",
+  "Owner": "Owner:",
+  "All": "ALL",
+  "Done": "DONE",
+  "Undone": "UNDONE",
+  "DMCaptionLong": "Display mode",
+  "DMCaptionShort": "Mode",
+
+  "FilterLists": "Filter lists:",
+  "ListsAll": "ALL",
+  "ListsArchived": "ARCHIVED",
+  "ListsUnarchived": "UNARCHIVED",
+  "OpenList": "OPEN LIST",
+  "AddNewList": "Create a new list:",
+  "ListNamePlaceholder": "List name",
+  "AddListButton": "ADD LIST"
+}

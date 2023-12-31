@@ -1,46 +1,44 @@
 import React from "react";
 import { Button, Typography } from "@mui/material";
+import { Box } from "@mui/system";
+import { useTranslation } from "react-i18next";
 
 const RoleToggleButton = ({ isOwner, toggleRole }) => {
+  const { t } = useTranslation();
   return (
     <>
-      <Button
-        variant="contained"
-        onClick={toggleRole}
+      <Box
         sx={{
-          fontSize: {
-            xs: "0.6rem",
-          },
-          position: "absolute",
-          top: 0,
-          left: { xs: "65%", md: "55%", lg: "55%", xl: "55%" },
+          display: "flex",
         }}
       >
-        {isOwner ? "Změna" : "Změna"}
-      </Button>
-      {isOwner ? (
+        <Button
+          variant="contained"
+          onClick={toggleRole}
+          sx={{
+            fontSize: {
+              xs: "0.6rem",
+            },
+            position: "absolute",
+            top: -40,
+            left: { xs: "65%", md: "55%", lg: "55%", xl: "55%" },
+          }}
+        >
+          {isOwner ? "Změna" : "Změna"}
+        </Button>
         <Typography
           sx={{
             fontSize: "1rem",
             position: "absolute",
-            top: 2,
+            top: -35,
             fontWeight: "bold",
+            left: { xs: "40%", sm: "40%", md: "40%", lg: "45%", xl: "40%" },
           }}
         >
-          Vlastník
+          {isOwner ? "Vlastník" : "Člen"}
         </Typography>
-      ) : (
-        <Typography
-          sx={{
-            fontSize: "1rem",
-            position: "absolute",
-            top: 2,
-            fontWeight: "bold",
-          }}
-        >
-          Člen
-        </Typography>
-      )}
+      </Box>
+
       <Typography
         sx={{
           fontSize: {
@@ -56,7 +54,7 @@ const RoleToggleButton = ({ isOwner, toggleRole }) => {
           fontWeight: "bold",
         }}
       >
-        Koupit:
+        {t("InCart")}
       </Typography>
     </>
   );

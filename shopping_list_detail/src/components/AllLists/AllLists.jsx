@@ -24,6 +24,7 @@ import { mockListData } from "../mockData";
 import ThemeSwitcher from "../DarkMode/ThemeSwitcher";
 import LanguageSwitcher from "../i18n/TranslationSwitch";
 import { useTranslation } from "react-i18next";
+import BarChartComponent from "../Charts/BarChartComponent";
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
@@ -39,6 +40,11 @@ export default function ShoppingListsOverview() {
   const [deletingListId, setDeletingListId] = useState(null);
   const [userRole, setUserRole] = useState("owner");
   const { t } = useTranslation();
+
+  const barChartData = lists.map((list) => ({
+    name: list.name,
+    Počet_položek: list.items.length,
+  }));
 
   /* useEffect(() => {
     api
@@ -128,6 +134,9 @@ export default function ShoppingListsOverview() {
         }}
       />
       <UserRoleToggle userRole={userRole} setUserRole={setUserRole} />
+      <Box sx={{ mt: 2, mb: -7, justifyContent: "center", display: "flex" }}>
+        <BarChartComponent data={barChartData} />
+      </Box>
       <FilterComponent setFilter={setFilter} />
 
       <Box

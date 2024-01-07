@@ -11,7 +11,11 @@ export default function ListItemControls({
   listId,
   setItems,
 }) {
-  const deleteItem = async (itemId) => {
+  const deleteItem = (itemId) => {
+    setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+  };
+
+  /* const deleteItem = async (itemId) => {
     try {
       await axios.delete(
         `${process.env.REACT_APP_API_URL}/shoppingLists/${listId}/items/${itemId}`
@@ -20,7 +24,7 @@ export default function ListItemControls({
     } catch (error) {
       console.error("Error deleting item:", error);
     }
-  };
+  };*/
   return (
     <div>
       <IconButton
@@ -48,7 +52,7 @@ export default function ListItemControls({
       <IconButton
         edge="end"
         aria-label="delete"
-        onClick={() => deleteItem(item._id)}
+        onClick={() => deleteItem(item.id)}
         sx={{ color: "#e00914", marginLeft: "auto", marginRight: 1 }}
       >
         <DeleteForeverIcon />

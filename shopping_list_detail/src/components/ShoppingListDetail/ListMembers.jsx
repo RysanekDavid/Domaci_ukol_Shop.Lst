@@ -27,8 +27,7 @@ export default function ListMembers({ members, isOwner, handleDeleteMember }) {
           sm: "10vh",
           xs: "12vh",
         },
-        position: "absolute",
-        bottom: 70,
+
         overflow: "auto",
         fontFamily: "Edu TAS Beginner",
         fontSize: {

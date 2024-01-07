@@ -19,6 +19,8 @@ import ListFilterControls from "./ListFilterControls";
 import ThemeSwitcher from "../DarkMode/ThemeSwitcher";
 import LanguageSwitcher from "../i18n/TranslationSwitch";
 import { useTranslation } from "react-i18next";
+import PieChartComponent from "../Charts/PieChartComponent";
+import { ResponsiveContainer } from "recharts";
 
 export default function ListDetailComponent() {
   const { listId } = useParams();
@@ -38,6 +40,17 @@ export default function ListDetailComponent() {
   const { t } = useTranslation();
 
   //endpoint /shoppingLists/:listId.
+  const completedItems = items.filter((item) => item.inBasket).length;
+  const remainingItems = items.length - completedItems;
+
+  const pieData = [
+    {
+      name: "Vyřešené",
+      value: completedItems,
+      color: "rgba(21, 74, 15, 1)",
+    },
+    { name: "Nevyřešené", value: remainingItems, color: "rgba(130, 34, 8, 1)" },
+  ];
 
   const fetchListDetails = async (listId) => {
     console.log("Fetching details for listId:", listId);
@@ -79,8 +92,20 @@ export default function ListDetailComponent() {
     navigate("/"); // přesměruje na domovskou stránku
   };
 
+  const handleToggleInBasket = (item) => {
+    setItems((prevItems) =>
+      prevItems.map((i) => {
+        if (i.id === item.id) {
+          // Změna z _id na id
+          return { ...i, inBasket: !i.inBasket };
+        }
+        return i;
+      })
+    );
+  };
+
   // Funkce pro změnu stavu položky
-  const handleToggleInBasket = async (item) => {
+  /* const handleToggleInBasket = async (item) => {
     try {
       const updatedItem = { ...item, inBasket: !item.inBasket };
       const response = await axios.put(
@@ -94,7 +119,7 @@ export default function ListDetailComponent() {
     } catch (error) {
       console.error("Error updating item status:", error);
     }
-  };
+  };*/
 
   const toggleRole = () => {
     setIsOwner(!isOwner);
@@ -139,18 +164,20 @@ export default function ListDetailComponent() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "white",
-        borderRadius: 6,
-        border: 2,
-        borderColor: "grey.300",
-        boxShadow: 6,
-        position: "absolute",
-        transform: "translate(-50%, -50%)",
-        top: "50%",
-        left: "50%",
-        minWidth: { xl: "94%", lg: "80%", md: "95%", sm: "85%", xs: "96%" },
-        minHeight: "90vh",
-        maxHeight: "80vh",
+        borderRadius: 8,
+        border: 5,
+        borderColor: "rgba(80, 2, 99,0.2)",
+        boxShadow: 20,
+        position: "relative",
+        maxWidth: "100%",
+        mt: 5,
+        /*minWidth: {
+          xl: "100%",
+          lg: "100%",
+          md: "100%",
+          sm: "100%",
+          xs: "100%",
+        },*/
         zIndex: 0,
         bgcolor: (theme) =>
           theme.palette.mode === "dark"
@@ -162,8 +189,8 @@ export default function ListDetailComponent() {
         sx={{
           display: "flex",
           position: "absolute",
-          top: { xl: 20, lg: 20, md: 20, sm: 20, xs: 0 },
-          right: { xl: 90, lg: 90, md: 90, sm: 40, xs: 18 },
+          top: { xl: 8, lg: 12, md: 12, sm: 8, xs: 6 },
+          right: { xl: 90, lg: 90, md: 90, sm: 40, xs: 16 },
         }}
       />
       <Box
@@ -181,7 +208,7 @@ export default function ListDetailComponent() {
           sx={{
             display: "flex",
             position: "absolute",
-            top: { xl: -10, lg: -10, md: -10, sm: -10, xs: -40 },
+            top: { xl: -10, lg: -10, md: -10, sm: -10, xs: 50 },
             left: {
               xl: 80,
               lg: 60,
@@ -204,49 +231,49 @@ export default function ListDetailComponent() {
           listName={listName}
           setListName={setListName}
           isOwner={isOwner}
-          listId={listId} // Předání listId do komponenty
+          listId={listId}
         />
       </Box>
       <ToggleRole isOwner={isOwner} toggleRole={toggleRole} />
       <Box
         sx={{
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          p: 2,
-          // Other styles
-          // Responsive breakpoints
-          "@media (min-width:600px)": {
-            flexDirection: "row",
+          minWidth: {
+            xl: "80%",
+            lg: "70%",
+            md: "70%",
+            sm: "80%",
+            xs: "80%",
+          },
+          flexDirection: {
+            xs: "column",
+            sm: "row",
+            md: "row",
+            lg: "row",
+            xl: "row",
           },
         }}
       >
-        <List
+        <Box
           sx={{
-            width: "90%",
+            display: "flex",
+            flex: 1,
+            mr: 1,
+            minWidth: {
+              xl: "98%",
+              lg: "98%",
+              md: "98%",
+              sm: "70%",
+              xs: "100%",
+            },
+            maxHeight: "35vh",
+            overflow: "auto",
+
+            mt: 18,
+            ml: { xl: -13, lg: -16, md: -13, sm: -4, xs: 0 },
             border: 4,
             borderColor: "rgba(80, 2, 99, 1)",
             borderRadius: 5,
-            p: 1,
-            maxHeight: {
-              xl: "40vh",
-              lg: "37vh",
-              md: "37vh",
-              sm: "32vh",
-              xs: "31vh",
-            },
-            minHeight: {
-              xs: "30vh",
-              xl: "40vh",
-              lg: "37vh",
-              md: "37vh",
-              sm: "32vh",
-            },
-            position: "absolute",
-            top: 150,
-            zIndex: 1,
-            overflow: "auto",
             fontFamily: "Edu TAS Beginner",
             fontWeight: "bold",
             fontSize: {
@@ -258,88 +285,95 @@ export default function ListDetailComponent() {
             },
           }}
         >
-          {getFilteredItems().map((item, index) => (
-            <ListItem
-              key={index}
-              sx={{
-                borderBottom: 2,
-                mb: 0.5,
-                borderRadius: 0,
-                borderColor: "rgba(80, 2, 99, 0.5)",
-                zIndex: 1,
-                display: "flex",
-              }}
-            >
-              <ListItemControls
-                item={item}
-                handleToggleInBasket={handleToggleInBasket}
-                listId={listId}
-                setItems={setItems}
-              />
-            </ListItem>
-          ))}
-        </List>
-        <AddItemForm
-          inputValue={inputValue}
-          setInputValue={setInputValue}
-          listId={listId}
-          setItems={setItems}
-        />
-      </Box>
-      {isOwner && (
-        <MemberAddForm
-          newMemberName={newMemberName}
-          setNewMemberName={setNewMemberName}
-          handleAddMember={handleAddMember}
-        />
-      )}
+          <List sx={{ width: "100%" }}>
+            {getFilteredItems().map((item, index) => (
+              <ListItem
+                key={index}
+                sx={{
+                  borderBottom: 2,
+                  mb: 0.5,
+                  borderRadius: 0,
+                  borderColor: "rgba(80, 2, 99, 0.5)",
+                  zIndex: 1,
+                  display: "flex",
+                }}
+              >
+                <ListItemControls
+                  item={item}
+                  handleToggleInBasket={handleToggleInBasket}
+                  listId={listId}
+                  setItems={setItems}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
 
-      <Typography
-        sx={{
-          fontSize: { xl: "1.4rem", lg: "1.2rem" },
-          position: "absolute",
-          bottom: 14,
-          right: { xl: 80, lg: 24, md: 24, sm: 24, xs: 24 },
-          fontWeight: "bold",
-          display: {
-            xl: "flex",
-            lg: "flex",
-            md: "flex",
-            sm: "none",
-            xs: "none",
-          },
-        }}
-      >
-        {t("Owner")} David Ryšánek
-      </Typography>
-      <Typography
-        sx={{
-          fontSize: {
-            xl: "1.6rem",
-            lg: "1.5rem",
-            md: "1.5rem",
-            sm: "1.4rem",
-            xs: "1.2rem",
-          },
-          position: "absolute",
-          bottom: {
-            xl: "25vh",
-            lg: "27vh",
-            md: "28vh",
-            sm: "26vh",
-            xs: "23vh",
-          },
-          left: { xl: 66, lg: 24, md: 24, sm: 24, xs: 24 },
-          fontWeight: "bold",
-        }}
-      >
-        {t("Members")}
-      </Typography>
-      <ListMembers
-        members={members}
-        isOwner={isOwner}
-        handleDeleteMember={handleDeleteMember}
+        <Box
+          sx={{
+            display: "flex",
+            flex: 1,
+            pt: { xl: 18, lg: 15, md: 14, sm: 18, xs: 1 },
+            pl: { xl: 0, lg: 0, md: 0, sm: 0, xs: "70%" },
+          }}
+        >
+          <ResponsiveContainer>
+            <PieChartComponent data={pieData} />
+          </ResponsiveContainer>
+        </Box>
+      </Box>
+      <AddItemForm
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        listId={listId}
+        setItems={setItems}
       />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            minWidth: "94%",
+            alignItems: "left",
+            mb: { xl: 2 },
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: {
+                xl: "1.6rem",
+                lg: "1.5rem",
+                md: "1.5rem",
+                sm: "1.4rem",
+                xs: "1.2rem",
+              },
+              fontWeight: "bold",
+            }}
+          >
+            {t("Members")}
+          </Typography>
+        </Box>
+        <ListMembers
+          members={members}
+          isOwner={isOwner}
+          handleDeleteMember={handleDeleteMember}
+        />
+
+        {isOwner && (
+          <MemberAddForm
+            newMemberName={newMemberName}
+            setNewMemberName={setNewMemberName}
+            handleAddMember={handleAddMember}
+          />
+        )}
+      </Box>
     </Box>
   );
 }

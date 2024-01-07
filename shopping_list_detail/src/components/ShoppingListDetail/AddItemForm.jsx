@@ -51,7 +51,25 @@ export default function AddItemForm({
       sx={{
         display: "flex",
         alignItems: "center",
-        mt: { xl: 36, lg: 30, md: 28, sm: 16, xs: 20 },
+        minWidth: "80%",
+        justifyContent: {
+          xl: "center",
+          lg: "center",
+          md: "center",
+          sm: "center",
+          xs: "start",
+        },
+
+        pb: { xl: 0, lg: 0, md: 0, sm: 0, xs: 2 },
+        pt: { xl: 4, lg: 0, md: 0, sm: 0, xs: 0 },
+
+        pr: {
+          xl: 0,
+          lg: 0,
+          md: 0,
+          sm: 0,
+          xs: 4,
+        },
       }}
     >
       <TextField
@@ -62,14 +80,15 @@ export default function AddItemForm({
         sx={{
           ml: 2,
           mr: 1,
-
+          maxWidth: { xs: "40vw" },
           minWidth: {
-            xs: "44vw",
+            xs: "30vw",
             sm: "10rem",
             md: "10rem",
             lg: "15rem",
             xl: "20rem",
           },
+
           "& .MuiOutlinedInput-root": {
             color: "rgba(80, 2, 99,0.8)", // Barva textu
             "& fieldset": {
